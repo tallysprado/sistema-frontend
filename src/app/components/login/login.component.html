@@ -1,0 +1,26 @@
+<body>
+  <ng-content></ng-content>
+  <section class="bg-cyan-50 min-h-screen w-full min-w-screen flex items-center justify-center">
+
+      <!-- Login container -->
+      <div class="bg-gray-100 flex rounded-2x1 shadow-lg max-w-3xl h-96">
+
+          <!--form-->
+          <div class="w-1/2 px-16 flex flex-col justify-center">
+              <h2 class="font-bold text-2xl">Login</h2>
+              <p>Sistema Integrado de Gestão de Matrículas</p>
+
+              <form [formGroup]="loginForm" action="" class="mt-5 flex flex-col space-y-4">
+                  <input formControlName="username" type="text" placeholder="Usuário" class="p-4 rounded-2x1"/>
+                  <input formControlName="password" type="password" placeholder="Senha" class="p-4 rounded-2x1"/>
+                  <button (click)="submit()" type="submit" class="bg-cyan-700 text-white font-bold p-4 rounded-2x1">Entrar</button>
+              </form>
+          </div>
+
+          <!--image-->
+          <div class="w-1/2">
+              <img src="unifor2.jpg" alt="" class="h-full w-full object-cover"/>
+          </div>
+      </div>
+  </section>
+</body>
