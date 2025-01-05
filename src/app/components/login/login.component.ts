@@ -2,12 +2,14 @@ import { routes } from './../../app.routes';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
   ],
+  providers: [AuthService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -16,7 +18,8 @@ export class LoginComponent {
   @Output("submit") onSubmit = new EventEmitter();
 
   constructor(
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ){
     this.loginForm = new FormGroup({
       username: new FormControl('', [Validators.required]),
@@ -26,6 +29,16 @@ export class LoginComponent {
 
   submit(){
     console.log(this.loginForm.value);
+    this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe({
+      next: () => {
+        alert('Login');
+
+      },
+      error: () => {
+        alert('Usuário ou senha inválidos');
+      }
+
+    });
     // this.onSubmit.emit(this.loginForm.value);
   }
 
