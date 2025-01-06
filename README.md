@@ -1,11 +1,11 @@
 # SistemaFrontend
 
-## 1. Baixe o repositório rode
+## 1. Baixe o repositório e execute
 ```bash script
 npm install
 ```
 
-## 2. Após instalacão de dependências, execute 
+## 2. Após instalacão de dependências, inicie o servidor
 ```bash script
 npm start
 ```
