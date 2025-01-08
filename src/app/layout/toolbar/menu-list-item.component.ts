@@ -2,7 +2,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Component, Input } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { INavbarData } from './types';
 import { MatButton, MatButtonModule } from '@angular/material/button';
@@ -31,11 +31,11 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
         <ng-container *ngIf="data.items && data.items.length > 0">
           <mat-nav-list>
             @for (link of data.items; track link) {
-
             <button
-              class="hover:bg-blue-500 hover:text-white flex justify-content-around w-full p-2 mb-2"
+            (click)="navigateTo(link.routerLink)"
+              class="hover:bg-gray-200 hover:shadow-sm flex justify-content-around w-full p-2 mb-2"
             >
-              <mat-icon class="text-sm">{{ link.icon }} </mat-icon>
+              <mat-icon class="ml-0 text-sm">{{ link.icon }} </mat-icon>
               <label class="ml-5">{{ link.label }}</label>
             </button>
             }
@@ -46,13 +46,15 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
   `,
   styles: [
     `
-      a {
-        text-decoration: none;
-        color: inherit;
+      button{
+        margin: 00; width: 100vh; left: 0; display: flex;
       }
     `,
   ],
 })
 export class MenuListItemComponent {
   @Input() data!: INavbarData;
+  constructor(private router: Router) {}
+  trackByFn(index: number, item: any) { return item.label; }
+  navigateTo(path: string) { this.router.navigate([path]); }
 }
