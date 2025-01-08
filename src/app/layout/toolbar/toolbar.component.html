@@ -1,43 +1,24 @@
-<mat-toolbar class="!bg-blue-700">
-  <button
-    mat-icon-button
-    (click)="drawer.toggle()"
-    aria-label="Menu"
-  >
+<mat-toolbar class="!bg-blue-700 w-full !text-sm mat-elevation-z8">
+  <button mat-icon-button (click)="drawer.toggle()" aria-label="Menu">
     <mat-icon class="!text-white">menu</mat-icon>
   </button>
   <span class="!text-white">SIDM - Sistema Integrado de Matrículas Online</span>
   <span class="spacer"></span>
-  <button
-  (click)="logout()"
-  mat-icon-button
-    class="!text-white"
-    aria-label="Sair"
-  >
+  <button (click)="logout()" mat-icon-button class="!text-white" aria-label="Sair">
     <mat-icon>logout</mat-icon>
   </button>
 </mat-toolbar>
 
 <mat-drawer-container class="sidenav-container" autosize>
   <mat-drawer #drawer class="sidenav" mode="side">
-    <mat-list>
-      <mat-list>
-        Usuários
-        <mat-list-item>Criar</mat-list-item>
-        <mat-list-item>Consultar</mat-list-item>
-      </mat-list>
-      <mat-list>
-        Coordenadores
-        <mat-list-item>Semestre</mat-list-item>
-        <mat-list-item>Curso</mat-list-item>
-        <mat-list-item>Disciplina</mat-list-item>
-      </mat-list>
-      <mat-list>Matriz Curricular</mat-list>
-     </mat-list>
+    <mat-nav-list class="!m-0 !p-0">
+      <ng-container *ngFor="let item of navbarData">
+        <app-menu-list-item [data]="item"></app-menu-list-item>
+      </ng-container>
+    </mat-nav-list>
   </mat-drawer>
 
   <div class="sidenav-content" (click)="drawer.close()">
     <p>Contents</p>
   </div>
-
 </mat-drawer-container>

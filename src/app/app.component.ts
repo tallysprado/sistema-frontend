@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+
 import { RouterOutlet } from '@angular/router';
-import { LoginComponent } from "./components/login/login.component";
-import { OAuthService } from 'angular-oauth2-oidc';
+import { ToolbarComponent } from "./layout/toolbar/toolbar.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [ToolbarComponent, ToolbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
