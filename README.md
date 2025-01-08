@@ -1,6 +1,6 @@
 # SistemaFrontend
 ### docker do sistema backend deve estar em execução pelo menos
-### no diretório raiz do sistema-backend <https://github.com/tallysprado/sistema-backend>, executar (docker instalado)
+### no diretório raiz do sistema-backend <https://github.com/tallysprado/sistema-backend>, com Docker instalado, executar
 ```bash script
 docker-compose -p sistema-backend up
 ```
