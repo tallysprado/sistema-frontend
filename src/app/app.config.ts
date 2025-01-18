@@ -1,40 +1,63 @@
-import { APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { AutoRefreshTokenService, KeycloakAngularModule, KeycloakService, UserActivityService, withAutoRefreshToken } from 'keycloak-angular';
+import {
+  APP_INITIALIZER,
+  ApplicationConfig,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { OAuthService, provideOAuthClient } from 'angular-oauth2-oidc';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
+
+const urlCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
+  urlPattern: /^(http:\/\/localhost:9081)(\/.*)?$/i,
+  bearerPrefix: 'Bearer',
+});
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-
-export const authCodeFlowConfig = {
-  issuer:  "http://localhost:9081/realms/sistema-backend",
-  tokenEndpoint: "http://localhost:9081/realms/sistema-backend/protocol/openid-connect/token",
-  redirectUri: window.location.origin,
-  clientId: "sistemaClient",
-  responseType: "code",
-  scope: "openid profile",
-  locale: "pt-BR",
-};
-
-function initializeOAuth(oauthService: OAuthService): Promise<void> {
-  return new Promise((resolve) => {
-    oauthService.configure(authCodeFlowConfig);
-    oauthService.setupAutomaticSilentRefresh();
-    oauthService.loadDiscoveryDocumentAndLogin().then(() => resolve());
-  });
-}
+import {
+  provideKeycloak,
+  createInterceptorCondition,
+  IncludeBearerTokenCondition,
+  INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+  includeBearerTokenInterceptor,
+} from 'keycloak-angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    provideOAuthClient(),
-    provideHttpClient(withFetch()),
+    provideKeycloak({
+      config: {
+        url: 'http://localhost:9081',
+        realm: 'sistema-backend',
+        clientId: 'sistemaClient',
+
+      },
+      initOptions: {
+        onLoad: 'login-required',
+        // silentCheckSsoRedirectUri:
+        //   window.location.origin + '/silent-check-sso.html',
+      },
+      features: [
+        withAutoRefreshToken({
+          onInactivityTimeout: `logout`,
+          sessionTimeout: 300000,
+        })
+      ],
+      providers: [AutoRefreshTokenService, UserActivityService]
+    }),
     {
-      provide: APP_INITIALIZER,
-      useFactory: (oauthService: OAuthService) => () => initializeOAuth(oauthService),
-      multi: true,
-      deps: [OAuthService],
-    }, provideAnimationsAsync()
+      provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+      useValue: [urlCondition], // <-- Note that multiple conditions might be added.
+    },
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
+    provideRouter(routes),
+    provideAnimationsAsync(),
   ],
 };

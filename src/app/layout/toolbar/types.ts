@@ -3,5 +3,6 @@ export interface INavbarData {
   icon?: string;
   label: string;
   expanded?: boolean;
+  roles?: string[];
   items?: INavbarData[];
 }
