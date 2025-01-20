@@ -2,14 +2,15 @@ import { KeycloakAngularModule } from 'keycloak-angular';
 import { Component } from '@angular/core';
 
 import { RouterOutlet } from '@angular/router';
-import { ToolbarComponent } from "./layout/toolbar/toolbar.component";
+import { ToolbarComponent } from "./components/toolbar/toolbar.component";
 import { KeycloakService } from 'keycloak-angular';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
 @Component({
   selector: 'app-root',
-  imports: [ToolbarComponent, ToolbarComponent, KeycloakAngularModule],
+  imports: [ToolbarComponent, ToolbarComponent, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

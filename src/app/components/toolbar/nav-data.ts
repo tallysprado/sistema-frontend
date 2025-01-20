@@ -14,10 +14,18 @@ export const navbarData: INavbarData[] = [
         roles: ['coordenador'],
       },
       {
-        routerLink: 'users/search',
+        routerLink: 'users/aluno',
         icon: 'person_search',
-        label: 'Consultar',
+        label: 'Alunos',
         roles: ['coordenador'],
+        items: [
+          {
+            routerLink: 'users/aluno/create',
+            label: 'Criar',
+            icon: 'add_circle',
+            roles: ['coordenador'],
+          },
+        ],
       },
     ],
   },
