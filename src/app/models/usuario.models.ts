@@ -8,6 +8,8 @@ export type Usuario = {
   senha: string | null;
   cpf: string | null;
   rg: string | null;
+  matricula: string | null;
+  disciplina: string | null;
 }
 
 export interface IUsuario {

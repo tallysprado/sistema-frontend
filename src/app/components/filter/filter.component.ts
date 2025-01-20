@@ -16,6 +16,7 @@ import { style } from '@angular/animations';
 import { transition } from '@angular/animations';
 import { animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -46,6 +47,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     FormsModule,
     MatIconModule,
     CommonModule,
+    MatTooltipModule,
   ],
   animations: [
     trigger('detailExpand', [
@@ -69,7 +71,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
               size="small"
               matInput
               type="text"
-              [(ngModel)]="aluno.matricula"
+              [(ngModel)]="usuario.matricula"
             />
           </mat-form-field>
         </mat-grid-tile>
@@ -77,7 +79,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         <mat-grid-tile>
           <mat-form-field class="!w-full !m-3">
             <mat-label>Nome</mat-label>
-            <input size="small" matInput type="text" [(ngModel)]="aluno.nome" />
+            <input size="small" matInput type="text" [(ngModel)]="usuario.nome" />
           </mat-form-field>
         </mat-grid-tile>
 
@@ -88,7 +90,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
               size="small"
               matInput
               type="text"
-              [(ngModel)]="aluno.disciplina"
+              [(ngModel)]="usuario.disciplina"
             />
           </mat-form-field>
         </mat-grid-tile>
@@ -96,14 +98,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
         <mat-grid-tile>
           <mat-form-field class="!w-full !m-3">
             <mat-label>CPF</mat-label>
-            <input size="small" matInput type="text" [(ngModel)]="aluno.cpf" />
+            <input size="small" matInput type="text" [(ngModel)]="usuario.cpf" />
           </mat-form-field>
         </mat-grid-tile>
 
         <mat-grid-tile>
           <mat-form-field class="!w-full !m-3">
             <mat-label>RG</mat-label>
-            <input size="small" matInput type="text" [(ngModel)]="aluno.rg" />
+            <input size="small" matInput type="text" [(ngModel)]="usuario.rg" />
           </mat-form-field>
         </mat-grid-tile>
 
@@ -114,7 +116,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
               size="small"
               matInput
               type="text"
-              [(ngModel)]="aluno.email"
+              [(ngModel)]="usuario.email"
             />
           </mat-form-field>
         </mat-grid-tile>
@@ -122,8 +124,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
       <mat-divider></mat-divider>
       <div class="flex justify-end mt-3">
-        <button mat-flat-button class="primary-button mr-3">Consultar</button>
-        <button mat-flat-button class="danger-button" (click)="limpar()">
+        <button mat-flat-button class="primary-button mr-3" matTooltip="Consultar usuários" (click)="findByFilter()">Consultar</button>
+        <button mat-flat-button matTooltip="Limpar campos" class="danger-button" (click)="limpar()">
           Limpar
         </button>
       </div>
@@ -145,7 +147,18 @@ const ELEMENT_DATA: PeriodicElement[] = [
             } @else if (element.professor){
               {{ element.professor.matricula }}
             }
-
+          }
+          @if(column == 'Ações'){
+            <button
+            matTooltip="Editar"
+            class="text-blue-500 mr-2" mat-icon-button>
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+            matTooltip="Visualizar"
+            class="text-blue-500" mat-icon-button>
+              <mat-icon>visibility</mat-icon>
+            </button>
           }
           @else{
             {{ element[column.toLocaleLowerCase()] }}
@@ -161,6 +174,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
           <button
             mat-icon-button
             aria-label="expand row"
+            matTooltip="Visualizar disciplinas"
             (click)="
               expandedElement = expandedElement === element ? null : element;
               $event.stopPropagation()
@@ -238,13 +252,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
   `,
 })
 export class FilterComponent {
-  aluno: Aluno = {
+
+  usuario: Usuario = {
     id: null,
     nome: null,
-    matricula: null,
     cpf: null,
     rg: null,
     email: null,
+    cargo: null,
+    senha: null,
+    matricula: null,
     disciplina: null,
   };
   displayedColumns: string[] = ['Matrícula', 'Nome', 'Cargo', 'E-mail', 'Ações'];
@@ -256,6 +273,23 @@ export class FilterComponent {
     this.findAluno();
   }
 
+  findByFilter() {
+    this.usuarioService.findByFilter(this.usuario).subscribe((res) => {
+      this.dataSource = res as IUsuario[];
+      this.dataSource = this.dataSource.map((item) => {
+        return {
+          ...item,
+          disciplinas: [
+            { id: 1, nome: 'Engenharia de Software' },
+            { id: 2, nome: 'Qualidade de Software' },
+            { id: 3, nome: 'Física I' },
+            { id: 4, nome: 'Cálculo Diferencial e Integral II' },
+          ],
+        };
+      });
+    });
+  }
+
   findAluno() {
     this.usuarioService.findAll().subscribe((res) => {
       this.dataSource = res as IUsuario[];
@@ -265,8 +299,8 @@ export class FilterComponent {
           disciplinas: [
             { id: 1, nome: 'Engenharia de Software' },
             { id: 2, nome: 'Qualidade de Software' },
-            { id: 2, nome: 'Física I' },
-            { id: 2, nome: 'Cálculo Diferencial e Integral II' },
+            { id: 3, nome: 'Física I' },
+            { id: 4, nome: 'Cálculo Diferencial e Integral II' },
           ],
         };
       });
@@ -275,13 +309,15 @@ export class FilterComponent {
   }
 
   limpar() {
-    this.aluno = {
+    this.usuario = {
       id: null,
       nome: null,
-      matricula: null,
       cpf: null,
       rg: null,
       email: null,
+      cargo: null,
+      senha: null,
+      matricula: null,
       disciplina: null,
     };
   }

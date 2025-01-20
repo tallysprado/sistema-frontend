@@ -13,6 +13,10 @@ export class UsuarioServiceService {
     return this.http.post(`${this.api}/v1/usuario/save`, usuario);
   }
 
+  findByFilter(usuario: Usuario) {
+    return this.http.post(`${this.api}/v1/usuario/filter`, usuario);
+  }
+
   findAll() {
     return this.http.get(`${this.api}/v1/usuario/all`);
   }

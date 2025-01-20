@@ -126,8 +126,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
         <mat-divider></mat-divider>
         <div class="flex justify-end mt-3">
-          <button mat-flat-button class="mr-3">Salvar</button>
-          <button mat-flat-button mat-dialog-close (click)="limpar()">
+          <button mat-flat-button class="mr-3" type="submit" >Salvar</button>
+          <button mat-flat-button mat-dialog-close type="button" (click)="limpar()">
             Limpar
           </button>
         </div>
