@@ -37,7 +37,7 @@ export const navbarData: INavbarData[] = [
     items: [
       {
         routerLink: 'matricula/create',
-        label: 'Disciplina',
+        label: 'Aluno',
         icon: 'add_circle',
         roles: ['coordenador'],
       },

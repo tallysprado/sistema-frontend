@@ -155,7 +155,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     }
   `,
 })
-export class CriarUsuarioComponent {
+export class MatriculaComponent {
   form: FormGroup;
   private _snackBar = inject(MatSnackBar);
 
@@ -197,35 +197,23 @@ export class CriarUsuarioComponent {
   }
   onSubmit() {
     console.log(this.form.value);
-
     if (this.form.valid) {
-      if(this.form.controls['cpf'].value.length!==11){
-        this.form.controls['cpf'].setErrors({ invalid: true });
-        this.form.controls['cpf'].markAsTouched();
-        this.form.controls['cpf'].markAsDirty();
-        this.form.controls['cpf'].updateValueAndValidity();
-        this._snackBar.open('CPF inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }else{
-        console.log('Formulário válido');
-        const formData = this.form.value;
-        this.usuarioService.criarUsuario(formData).subscribe({
-          next: (res) => {
-            console.log(res);
-            this.showSuccess();
-          },
-          error: (err) => {
-            console.log(err);
-            if(err.error.message!==undefined){
-              this.showErrorMessage(err.error.message);
-            }else{
-              this.showError();
-            }
-          },
-        });
-      }
+      console.log('Formulário válido');
+      const formData = this.form.value;
+      this.usuarioService.criarUsuario(formData).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.showSuccess();
+        },
+        error: (err) => {
+          console.log(err);
+          if(err.error.message!==undefined){
+            this.showErrorMessage(err.error.message);
+          }else{
+            this.showError();
+          }
+        },
+      });
     } else {
       console.log('Formulário inválido');
       if(this.form.controls['cpf'].invalid) {

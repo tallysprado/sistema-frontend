@@ -6,7 +6,13 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { Aluno } from '../../models/aluno.models';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { UsuarioServiceService } from '../../services/usuario/usuario-service.service';
 import { IUsuario, Usuario } from '../../models/usuario.models';
 import { MatIconModule } from '@angular/material/icon';
@@ -63,11 +69,12 @@ const ELEMENT_DATA: PeriodicElement[] = [
     ]),
   ],
   template: `
-
     <div
       class="block card p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
     >
-    <h3 class="text-lg font-bold mb-4 ml-4 text-gray-500">Consultar usuários</h3>
+      <h3 class="text-lg font-bold mb-4 ml-4 text-gray-500">
+        Consultar usuários
+      </h3>
       <form [formGroup]="form" (ngSubmit)="findByFilter()">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
           <div>
@@ -86,12 +93,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
           <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Nome</mat-label>
-              <input
-                size="small"
-                matInput
-                type="text"
-                formControlName="nome"
-              />
+              <input size="small" matInput type="text" formControlName="nome" />
             </mat-form-field>
           </div>
 
@@ -110,24 +112,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
           <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>CPF</mat-label>
-              <input
-                size="small"
-                matInput
-                type="text"
-                formControlName="cpf"
-              />
+              <input size="small" matInput type="text" formControlName="cpf" />
             </mat-form-field>
           </div>
 
           <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>RG</mat-label>
-              <input
-                size="small"
-                matInput
-                type="text"
-                formControlName="rg"
-              />
+              <input size="small" matInput type="text" formControlName="rg" />
             </mat-form-field>
           </div>
 
@@ -167,107 +159,116 @@ const ELEMENT_DATA: PeriodicElement[] = [
         </div>
       </form>
     </div>
-  <div class="overflow-auto">
-    <table
-      *ngIf="dataSource.length > 0"
-      mat-table
-      multiTemplateDataRows
-      [dataSource]="dataSource"
-      class="min-w-full divide-y divide-gray-200"          >
-      @for (column of displayedColumns; track column) {
-      <ng-container class="!w-full md:!w-1/4" matColumnDef="{{ column }}">
-        <th
-        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-        mat-header-cell *matHeaderCellDef>{{ column.toUpperCase() }}</th>
-        <td mat-cell *matCellDef="let element">
-          @if(column == 'Matrícula'){ @if(element.aluno){
-          {{ element.aluno.matricula }}
-          } @else if (element.professor){
-          {{ element.professor.matricula }}
-          } } @if(column == 'Ações'){
-          <button
-            matTooltip="Editar"
-            class="text-blue-500 mr-2"
-            mat-icon-button
+    <div class="overflow-auto">
+      <table
+        *ngIf="dataSource.length > 0"
+        mat-table
+        multiTemplateDataRows
+        [dataSource]="dataSource"
+        class="min-w-full divide-y divide-gray-200"
+      >
+        @for (column of displayedColumns; track column) {
+        <ng-container class="!w-full md:!w-1/4" matColumnDef="{{ column }}">
+          <th
+            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            mat-header-cell
+            *matHeaderCellDef
           >
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button
-            matTooltip="Visualizar"
-            (click)="openModal(element.id); $event.stopPropagation()"
-            class="text-blue-500"
-            mat-icon-button
-          >
-            <mat-icon>visibility</mat-icon>
-          </button>
-          } @else{
-          {{ element[column.toLocaleLowerCase()] }}
-          }
-        </td>
-      </ng-container>
-      }
-      <ng-container matColumnDef="expand">
-        <th mat-header-cell *matHeaderCellDef aria-label="row actions">
-          &nbsp;
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <button
-            mat-icon-button
-            aria-label="expand row"
-            matTooltip="Visualizar disciplinas"
-            (click)="
-              expandedElement = expandedElement === element ? null : element;
-              $event.stopPropagation()
-            "
-          >
-            @if (expandedElement === element) {
-            <mat-icon>keyboard_arrow_up</mat-icon>
-            } @else {
-            <mat-icon>keyboard_arrow_down</mat-icon>
+            {{ column.toUpperCase() }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            @if(column == 'Matrícula'){ @if(element.aluno){
+            {{ element.aluno.matricula }}
+            } @else if (element.professor){
+            {{ element.professor.matricula }}
+            } @else if (element.coordenador){
+            {{ element.coordenador.matricula }}
+            } } @if(column == 'Ações'){
+            <button
+              matTooltip="Editar"
+              class="text-blue-500 mr-2"
+              mat-icon-button
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              matTooltip="Visualizar"
+              (click)="openModal(element.id); $event.stopPropagation()"
+              class="text-blue-500"
+              mat-icon-button
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+            } @else{
+            {{ element[column.toLocaleLowerCase()] }}
             }
-          </button>
-        </td>
-      </ng-container>
+          </td>
+        </ng-container>
+        }
+        <ng-container matColumnDef="expand">
+          <th mat-header-cell *matHeaderCellDef aria-label="row actions">
+            &nbsp;
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              mat-icon-button
+              aria-label="expand row"
+              matTooltip="Visualizar disciplinas"
+              (click)="
+                expandedElement = expandedElement === element ? null : element;
+                $event.stopPropagation()
+              "
+            >
+              @if (expandedElement === element) {
+              <mat-icon>keyboard_arrow_up</mat-icon>
+              } @else {
+              <mat-icon>keyboard_arrow_down</mat-icon>
+              }
+            </button>
+          </td>
+        </ng-container>
 
-      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-      <ng-container matColumnDef="expandedDetail">
-        <td
-          mat-cell
-          *matCellDef="let element"
-          [attr.colspan]="columnsToDisplayWithExpand.length"
-        >
-          <div
-            class="flex overflow-hidden flex flex-col"
-            [@detailExpand]="
-              element == expandedElement ? 'expanded' : 'collapsed'
-            "
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [attr.colspan]="columnsToDisplayWithExpand.length"
           >
             <div
-              class="!flex !flex-col !w-full"
-              *ngFor="let disciplina of element.disciplinas; let i = index"
+              class="flex overflow-hidden flex flex-col"
+              [@detailExpand]="
+                element == expandedElement ? 'expanded' : 'collapsed'
+              "
             >
-              {{ i + 1 }} - {{ disciplina.nome }}
+              <div
+                class="!flex !flex-col !w-full"
+                *ngFor="let disciplina of element.disciplinas; let i = index"
+              >
+                {{ i + 1 }} - {{ disciplina.nome }}
+              </div>
+              <br />
             </div>
-            <br />
-          </div>
-        </td>
-      </ng-container>
+          </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
-      <tr
-        mat-row
-        *matRowDef="let element; columns: columnsToDisplayWithExpand"
-        class="element-row"
-        [class.expanded-row]="expandedElement === element"
-        (click)="expandedElement = expandedElement === element ? null : element"
-      ></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: ['expandedDetail']"
-        class="detail-row"
-      ></tr>
-    </table>
-  </div>
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+        <tr
+          mat-row
+          *matRowDef="let element; columns: columnsToDisplayWithExpand"
+          class="element-row"
+          [class.expanded-row]="expandedElement === element"
+          (click)="
+            expandedElement = expandedElement === element ? null : element
+          "
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: ['expandedDetail']"
+          class="detail-row"
+        ></tr>
+      </table>
+    </div>
   `,
   styles: `
     .table {
