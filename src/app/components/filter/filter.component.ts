@@ -6,7 +6,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { Aluno } from '../../models/aluno.models';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsuarioServiceService } from '../../services/usuario/usuario-service.service';
 import { IUsuario, Usuario } from '../../models/usuario.models';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,6 +17,8 @@ import { transition } from '@angular/animations';
 import { animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ModalComponent } from '../modal-component/modal-component.component';
+import { MatDialog } from '@angular/material/dialog';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -48,6 +50,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatIconModule,
     CommonModule,
     MatTooltipModule,
+    ModalComponent,
+    ReactiveFormsModule,
   ],
   animations: [
     trigger('detailExpand', [
@@ -63,75 +67,108 @@ const ELEMENT_DATA: PeriodicElement[] = [
     <div
       class="block card p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
     >
-      <mat-grid-list cols="4" class="!w-full" rowHeight="100px">
-        <mat-grid-tile>
-          <mat-form-field class="!w-full !m-3">
-            <mat-label>Matrícula</mat-label>
-            <input
-              size="small"
-              matInput
-              type="text"
-              [(ngModel)]="usuario.matricula"
-            />
-          </mat-form-field>
-        </mat-grid-tile>
+      <form [formGroup]="form" (ngSubmit)="findByFilter()">
+        <mat-grid-list cols="4" class="!w-full" rowHeight="100px">
+          <mat-grid-tile>
+            <mat-form-field class="!w-full !m-3">
+              <mat-label>Matrícula</mat-label>
+              <input
+                size="small"
+                matInput
+                type="text"
+                style="text-transform: uppercase;"
+                formControlName="matricula"
+              />
+            </mat-form-field>
+          </mat-grid-tile>
 
-        <mat-grid-tile>
-          <mat-form-field class="!w-full !m-3">
-            <mat-label>Nome</mat-label>
-            <input size="small" matInput type="text" [(ngModel)]="usuario.nome" />
-          </mat-form-field>
-        </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field class="!w-full !m-3">
+              <mat-label>Nome</mat-label>
+              <input
+                size="small"
+                matInput
+                type="text"
+                formControlName="nome"
+              />
+            </mat-form-field>
+          </mat-grid-tile>
 
-        <mat-grid-tile>
-          <mat-form-field class="!w-full !m-3">
-            <mat-label>Disciplina</mat-label>
-            <input
-              size="small"
-              matInput
-              type="text"
-              [(ngModel)]="usuario.disciplina"
-            />
-          </mat-form-field>
-        </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field class="!w-full !m-3">
+              <mat-label>Disciplina</mat-label>
+              <input
+                size="small"
+                matInput
+                type="text"
+                formControlName="disciplina"
+              />
+            </mat-form-field>
+          </mat-grid-tile>
 
-        <mat-grid-tile>
-          <mat-form-field class="!w-full !m-3">
-            <mat-label>CPF</mat-label>
-            <input size="small" matInput type="text" [(ngModel)]="usuario.cpf" />
-          </mat-form-field>
-        </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field class="!w-full !m-3">
+              <mat-label>CPF</mat-label>
+              <input
+                size="small"
+                matInput
+                type="text"
+                formControlName="cpf"
+              />
+            </mat-form-field>
+          </mat-grid-tile>
 
-        <mat-grid-tile>
-          <mat-form-field class="!w-full !m-3">
-            <mat-label>RG</mat-label>
-            <input size="small" matInput type="text" [(ngModel)]="usuario.rg" />
-          </mat-form-field>
-        </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field class="!w-full !m-3">
+              <mat-label>RG</mat-label>
+              <input
+                size="small"
+                matInput
+                type="text"
+                formControlName="rg"
+              />
+            </mat-form-field>
+          </mat-grid-tile>
 
-        <mat-grid-tile>
-          <mat-form-field class="!w-full !m-3">
-            <mat-label>E-mail</mat-label>
-            <input
-              size="small"
-              matInput
-              type="text"
-              [(ngModel)]="usuario.email"
-            />
-          </mat-form-field>
-        </mat-grid-tile>
-      </mat-grid-list>
+          <mat-grid-tile>
+            <mat-form-field class="!w-full !m-3">
+              <mat-label>E-mail</mat-label>
+              <input
+                size="small"
+                matInput
+                type="text"
+                formControlName="email"
+              />
+            </mat-form-field>
+          </mat-grid-tile>
+        </mat-grid-list>
 
-      <mat-divider></mat-divider>
-      <div class="flex justify-end mt-3">
-        <button mat-flat-button class="primary-button mr-3" matTooltip="Consultar usuários" (click)="findByFilter()">Consultar</button>
-        <button mat-flat-button matTooltip="Limpar campos" class="danger-button" (click)="limpar()">
-          Limpar
-        </button>
-      </div>
+        <mat-divider></mat-divider>
+        <div class="flex justify-end mt-3">
+          <button
+            type="submit"
+            mat-flat-button
+            class="primary-button mr-3"
+            matTooltip="Consultar usuários"
+            (click)="findByFilter()"
+          >
+            Consultar
+          </button>
+          <button
+            type="button"
+            mat-flat-button
+            matTooltip="Limpar campos"
+            class="danger-button"
+            (click)="limpar()"
+          >
+            Limpar
+          </button>
+        </div>
+      </form>
     </div>
 
     <table
+      *ngIf="dataSource.length > 0"
       mat-table
       multiTemplateDataRows
       [dataSource]="dataSource"
@@ -141,27 +178,28 @@ const ELEMENT_DATA: PeriodicElement[] = [
       <ng-container matColumnDef="{{ column }}">
         <th mat-header-cell *matHeaderCellDef>{{ column.toUpperCase() }}</th>
         <td mat-cell *matCellDef="let element">
-          @if(column == 'Matrícula'){
-            @if(element.aluno){
-              {{ element.aluno.matricula }}
-            } @else if (element.professor){
-              {{ element.professor.matricula }}
-            }
-          }
-          @if(column == 'Ações'){
-            <button
+          @if(column == 'Matrícula'){ @if(element.aluno){
+          {{ element.aluno.matricula }}
+          } @else if (element.professor){
+          {{ element.professor.matricula }}
+          } } @if(column == 'Ações'){
+          <button
             matTooltip="Editar"
-            class="text-blue-500 mr-2" mat-icon-button>
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
+            class="text-blue-500 mr-2"
+            mat-icon-button
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
             matTooltip="Visualizar"
-            class="text-blue-500" mat-icon-button>
-              <mat-icon>visibility</mat-icon>
-            </button>
-          }
-          @else{
-            {{ element[column.toLocaleLowerCase()] }}
+            (click)="openModal(element.id); $event.stopPropagation()"
+            class="text-blue-500"
+            mat-icon-button
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
+          } @else{
+          {{ element[column.toLocaleLowerCase()] }}
           }
         </td>
       </ng-container>
@@ -252,7 +290,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   `,
 })
 export class FilterComponent {
-
+  form: FormGroup;
   usuario: Usuario = {
     id: null,
     nome: null,
@@ -264,17 +302,41 @@ export class FilterComponent {
     matricula: null,
     disciplina: null,
   };
-  displayedColumns: string[] = ['Matrícula', 'Nome', 'Cargo', 'E-mail', 'Ações'];
+  displayedColumns: string[] = [
+    'Matrícula',
+    'Nome',
+    'Cargo',
+    'E-mail',
+    'Ações',
+  ];
   dataSource: IUsuario[] = [];
   expandedElement: IUsuario | null = null;
   columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
 
-  constructor(private usuarioService: UsuarioServiceService) {
+  constructor(
+    private usuarioService: UsuarioServiceService,
+    public dialog: MatDialog,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      matricula: [''],
+      nome: [''],
+      disciplina: [''],
+      cpf: [''],
+      rg: [''],
+      email: [''],
+    });
     this.findAluno();
   }
 
+  openModal(element: any) {
+    this.dialog.open(ModalComponent, {
+      data: element,
+    });
+  }
+
   findByFilter() {
-    this.usuarioService.findByFilter(this.usuario).subscribe((res) => {
+    this.usuarioService.findByFilter(this.form.value).subscribe((res) => {
       this.dataSource = res as IUsuario[];
       this.dataSource = this.dataSource.map((item) => {
         return {
@@ -309,16 +371,7 @@ export class FilterComponent {
   }
 
   limpar() {
-    this.usuario = {
-      id: null,
-      nome: null,
-      cpf: null,
-      rg: null,
-      email: null,
-      cargo: null,
-      senha: null,
-      matricula: null,
-      disciplina: null,
-    };
+    this.form.reset();
+    this.dataSource = [];
   }
 }

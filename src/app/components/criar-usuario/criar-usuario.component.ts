@@ -57,7 +57,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       class="block card p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
     >
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <mat-grid-list cols="2" class="!w-full" rowHeight="100px">
+        <mat-grid-list cols="2" class="!w-full !md:grid-cols-1 !mobile-cols-1" rowHeight="100px">
           <mat-grid-tile>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Nome</mat-label>
@@ -92,8 +92,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 name="cpf"
                 matInput
                 type="text"
+                mask="999.999.999-99"
                 formControlName="cpf"
               />
+              <mat-error *ngIf="form.controls['cpf'].invalid && form.controls['cpf'].touched"> CPF inválido </mat-error>
             </mat-form-field>
           </mat-grid-tile>
 
@@ -142,6 +144,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
       height: 100%;
       width: 75vw;
     }
+    @media (max-width: 768px) {
+      .mobile-cols-1 {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
   `,
 })
 export class CriarUsuarioComponent {
@@ -161,7 +168,7 @@ export class CriarUsuarioComponent {
     this.form = this.fb.group({
       nome: ['', Validators.required],
       cargo: ['', Validators.required],
-      cpf: [''],
+      cpf: ['',  Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)],
       rg: [''],
       email: ['', Validators.email],
     });
@@ -178,6 +185,12 @@ export class CriarUsuarioComponent {
       panelClass: ['error-snackbar'],
     });
   }
+  showErrorMessage(message: string) {
+    this._snackBar.open('Erro ao criar usuário: ' + message, 'Fechar', {
+      duration: 3000,
+      panelClass: ['error-snackbar'],
+    });
+  }
   onSubmit() {
     console.log(this.form.value);
     if (this.form.valid) {
@@ -190,11 +203,31 @@ export class CriarUsuarioComponent {
         },
         error: (err) => {
           console.log(err);
-          this.showError();
+          this.showErrorMessage(err.error.message);
         },
       });
     } else {
       console.log('Formulário inválido');
+      if(this.form.controls['cpf'].invalid) {
+        this.form.controls['cpf'].setErrors({ invalid: true });
+        this.form.controls['cpf'].markAsTouched();
+        this.form.controls['cpf'].markAsDirty();
+        this.form.controls['cpf'].updateValueAndValidity();
+        this._snackBar.open('CPF inválido', 'Fechar', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        });
+      }
+      if(this.form.controls['rg'].invalid) {
+        this.form.controls['rg'].setErrors({ invalid: true });
+        this.form.controls['rg'].markAsTouched();
+        this.form.controls['rg'].markAsDirty();
+        this.form.controls['rg'].updateValueAndValidity();
+        this._snackBar.open('RG inválido', 'Fechar', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        });
+      }
     }
   }
   limpar() {
