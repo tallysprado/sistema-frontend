@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { UsuarioServiceService } from '../../services/usuario/usuario-service.service';
 import { Usuario } from '../../models/usuario.models';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { CommonModule } from '@angular/common';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -53,6 +54,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatButtonModule,
     ReactiveFormsModule,
     NgxMaskDirective,
+    CommonModule
   ],
   template: `
     <div
