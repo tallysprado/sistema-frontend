@@ -16,7 +16,7 @@ export const navbarData: INavbarData[] = [
       {
         routerLink: 'users/aluno',
         icon: 'person_search',
-        label: 'Alunos',
+        label: 'Consultar',
         roles: ['coordenador'],
         items: [
           {
@@ -26,6 +26,20 @@ export const navbarData: INavbarData[] = [
             roles: ['coordenador'],
           },
         ],
+      },
+    ],
+  },
+  {
+    routerLink: 'matricula',
+    icon: 'fal fa-user',
+    label: 'Matrícula',
+    roles: ['coordenador'],
+    items: [
+      {
+        routerLink: 'matricula/create',
+        label: 'Disciplina',
+        icon: 'add_circle',
+        roles: ['coordenador'],
       },
     ],
   },

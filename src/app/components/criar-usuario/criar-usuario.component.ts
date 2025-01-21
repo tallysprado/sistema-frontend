@@ -20,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { UsuarioServiceService } from '../../services/usuario/usuario-service.service';
 import { Usuario } from '../../models/usuario.models';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -40,25 +41,26 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 @Component({
   selector: 'app-filter',
+  providers: [provideNgxMask()],
   imports: [
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatGridListModule,
     MatTableModule,
     MatDividerModule,
     FormsModule,
     MatSelectModule,
     MatButtonModule,
     ReactiveFormsModule,
+    NgxMaskDirective,
   ],
   template: `
     <div
       class="block card p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
     >
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <mat-grid-list cols="2" class="!w-full !md:grid-cols-1 !mobile-cols-1" rowHeight="100px">
-          <mat-grid-tile>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Nome</mat-label>
               <input
@@ -66,12 +68,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 matInput
                 type="text"
                 name="nome"
+                style="text-transform: uppercase;"
                 formControlName="nome"
               />
             </mat-form-field>
-          </mat-grid-tile>
+          </div>
 
-          <mat-grid-tile>
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Cargo</mat-label>
               <mat-select formControlName="cargo" name="cargo">
@@ -82,9 +85,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 }
               </mat-select>
             </mat-form-field>
-          </mat-grid-tile>
+          </div>
 
-          <mat-grid-tile>
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>CPF</mat-label>
               <input
@@ -97,9 +100,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
               />
               <mat-error *ngIf="form.controls['cpf'].invalid && form.controls['cpf'].touched"> CPF inválido </mat-error>
             </mat-form-field>
-          </mat-grid-tile>
+          </div>
 
-          <mat-grid-tile>
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>RG</mat-label>
               <input
@@ -110,9 +113,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 formControlName="rg"
               />
             </mat-form-field>
-          </mat-grid-tile>
+          </div>
 
-          <mat-grid-tile>
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>E-mail</mat-label>
               <input
@@ -123,8 +126,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 formControlName="email"
               />
             </mat-form-field>
-          </mat-grid-tile>
-        </mat-grid-list>
+          </div>
+        </div>
 
         <mat-divider></mat-divider>
         <div class="flex justify-end mt-3">
@@ -168,7 +171,7 @@ export class CriarUsuarioComponent {
     this.form = this.fb.group({
       nome: ['', Validators.required],
       cargo: ['', Validators.required],
-      cpf: ['',  Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)],
+      cpf: [''],
       rg: [''],
       email: ['', Validators.email],
     });
@@ -203,7 +206,11 @@ export class CriarUsuarioComponent {
         },
         error: (err) => {
           console.log(err);
-          this.showErrorMessage(err.error.message);
+          if(err.error.message!==undefined){
+            this.showErrorMessage(err.error.message);
+          }else{
+            this.showError();
+          }
         },
       });
     } else {
@@ -224,6 +231,36 @@ export class CriarUsuarioComponent {
         this.form.controls['rg'].markAsDirty();
         this.form.controls['rg'].updateValueAndValidity();
         this._snackBar.open('RG inválido', 'Fechar', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        });
+      }
+      if(this.form.controls['email'].invalid) {
+        this.form.controls['email'].setErrors({ invalid: true });
+        this.form.controls['email'].markAsTouched();
+        this.form.controls['email'].markAsDirty();
+        this.form.controls['email'].updateValueAndValidity();
+        this._snackBar.open('E-mail inválido', 'Fechar', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        });
+      }
+      if(this.form.controls['nome'].invalid) {
+        this.form.controls['nome'].setErrors({ invalid: true });
+        this.form.controls['nome'].markAsTouched();
+        this.form.controls['nome'].markAsDirty();
+        this.form.controls['nome'].updateValueAndValidity();
+        this._snackBar.open('Nome inválido', 'Fechar', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        });
+      }
+      if(this.form.controls['cargo'].invalid) {
+        this.form.controls['cargo'].setErrors({ invalid: true });
+        this.form.controls['cargo'].markAsTouched();
+        this.form.controls['cargo'].markAsDirty();
+        this.form.controls['cargo'].updateValueAndValidity();
+        this._snackBar.open('Cargo inválido', 'Fechar', {
           duration: 3000,
           panelClass: ['error-snackbar'],
         });

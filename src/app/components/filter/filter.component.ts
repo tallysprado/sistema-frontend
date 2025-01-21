@@ -43,7 +43,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatGridListModule,
     MatTableModule,
     MatDividerModule,
     FormsModule,
@@ -64,12 +63,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
     ]),
   ],
   template: `
+
     <div
       class="block card p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
     >
+    <h3 class="text-lg font-bold mb-4 ml-4 text-gray-500">Consultar usuários</h3>
       <form [formGroup]="form" (ngSubmit)="findByFilter()">
-        <mat-grid-list cols="4" class="!w-full" rowHeight="100px">
-          <mat-grid-tile>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Matrícula</mat-label>
               <input
@@ -80,9 +81,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 formControlName="matricula"
               />
             </mat-form-field>
-          </mat-grid-tile>
+          </div>
 
-          <mat-grid-tile>
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Nome</mat-label>
               <input
@@ -92,9 +93,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 formControlName="nome"
               />
             </mat-form-field>
-          </mat-grid-tile>
+          </div>
 
-          <mat-grid-tile>
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Disciplina</mat-label>
               <input
@@ -104,9 +105,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 formControlName="disciplina"
               />
             </mat-form-field>
-          </mat-grid-tile>
+          </div>
 
-          <mat-grid-tile>
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>CPF</mat-label>
               <input
@@ -116,9 +117,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 formControlName="cpf"
               />
             </mat-form-field>
-          </mat-grid-tile>
+          </div>
 
-          <mat-grid-tile>
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>RG</mat-label>
               <input
@@ -128,9 +129,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 formControlName="rg"
               />
             </mat-form-field>
-          </mat-grid-tile>
+          </div>
 
-          <mat-grid-tile>
+          <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>E-mail</mat-label>
               <input
@@ -140,8 +141,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 formControlName="email"
               />
             </mat-form-field>
-          </mat-grid-tile>
-        </mat-grid-list>
+          </div>
+        </div>
 
         <mat-divider></mat-divider>
         <div class="flex justify-end mt-3">
@@ -166,17 +167,18 @@ const ELEMENT_DATA: PeriodicElement[] = [
         </div>
       </form>
     </div>
-
+  <div class="overflow-auto">
     <table
       *ngIf="dataSource.length > 0"
       mat-table
       multiTemplateDataRows
       [dataSource]="dataSource"
-      class="!w-full !mat-elevation-z8"
-    >
+      class="min-w-full divide-y divide-gray-200"          >
       @for (column of displayedColumns; track column) {
-      <ng-container matColumnDef="{{ column }}">
-        <th mat-header-cell *matHeaderCellDef>{{ column.toUpperCase() }}</th>
+      <ng-container class="!w-full md:!w-1/4" matColumnDef="{{ column }}">
+        <th
+        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        mat-header-cell *matHeaderCellDef>{{ column.toUpperCase() }}</th>
         <td mat-cell *matCellDef="let element">
           @if(column == 'Matrícula'){ @if(element.aluno){
           {{ element.aluno.matricula }}
@@ -265,6 +267,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         class="detail-row"
       ></tr>
     </table>
+  </div>
   `,
   styles: `
     .table {

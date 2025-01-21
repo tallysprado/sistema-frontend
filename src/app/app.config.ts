@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { OAuthService, provideOAuthClient } from 'angular-oauth2-oidc';
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask, provideNgxMask } from 'ngx-mask';
 import { routes } from './app.routes';
 import {
   HTTP_INTERCEPTORS,
@@ -59,6 +59,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideNgxMask(),
+    provideEnvironmentNgxMask(),
+
   ],
 };
