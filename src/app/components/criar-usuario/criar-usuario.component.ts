@@ -54,7 +54,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatButtonModule,
     ReactiveFormsModule,
     NgxMaskDirective,
-    CommonModule
+    CommonModule,
   ],
   template: `
     <div
@@ -101,7 +101,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 mask="999.999.999-99"
                 formControlName="cpf"
               />
-              <mat-error *ngIf="form.controls['cpf'].invalid && form.controls['cpf'].touched"> CPF inválido </mat-error>
+              <mat-error
+                *ngIf="
+                  form.controls['cpf'].invalid && form.controls['cpf'].touched
+                "
+              >
+                CPF inválido
+              </mat-error>
             </mat-form-field>
           </div>
 
@@ -134,8 +140,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
         <mat-divider></mat-divider>
         <div class="flex justify-end mt-3">
-          <button mat-flat-button class="mr-3" type="submit" >Salvar</button>
-          <button mat-flat-button mat-dialog-close type="button" (click)="limpar()">
+          <button mat-flat-button class="mr-3" type="submit">Salvar</button>
+          <button
+            mat-flat-button
+            mat-dialog-close
+            type="button"
+            (click)="limpar()"
+          >
             Limpar
           </button>
         </div>
@@ -201,7 +212,7 @@ export class CriarUsuarioComponent {
     console.log(this.form.value);
 
     if (this.form.valid) {
-      if(this.form.controls['cpf'].value.length!==11){
+      if (this.form.controls['cpf'].value.length !== 11) {
         this.form.controls['cpf'].setErrors({ invalid: true });
         this.form.controls['cpf'].markAsTouched();
         this.form.controls['cpf'].markAsDirty();
@@ -210,7 +221,7 @@ export class CriarUsuarioComponent {
           duration: 3000,
           panelClass: ['error-snackbar'],
         });
-      }else{
+      } else {
         console.log('Formulário válido');
         const formData = this.form.value;
         this.usuarioService.criarUsuario(formData).subscribe({
@@ -220,9 +231,9 @@ export class CriarUsuarioComponent {
           },
           error: (err) => {
             console.log(err);
-            if(err.error.message!==undefined){
+            if (err.error.message !== undefined) {
               this.showErrorMessage(err.error.message);
-            }else{
+            } else {
               this.showError();
             }
           },
@@ -230,7 +241,7 @@ export class CriarUsuarioComponent {
       }
     } else {
       console.log('Formulário inválido');
-      if(this.form.controls['cpf'].invalid) {
+      if (this.form.controls['cpf'].invalid) {
         this.form.controls['cpf'].setErrors({ invalid: true });
         this.form.controls['cpf'].markAsTouched();
         this.form.controls['cpf'].markAsDirty();
@@ -240,7 +251,7 @@ export class CriarUsuarioComponent {
           panelClass: ['error-snackbar'],
         });
       }
-      if(this.form.controls['rg'].invalid) {
+      if (this.form.controls['rg'].invalid) {
         this.form.controls['rg'].setErrors({ invalid: true });
         this.form.controls['rg'].markAsTouched();
         this.form.controls['rg'].markAsDirty();
@@ -250,7 +261,7 @@ export class CriarUsuarioComponent {
           panelClass: ['error-snackbar'],
         });
       }
-      if(this.form.controls['email'].invalid) {
+      if (this.form.controls['email'].invalid) {
         this.form.controls['email'].setErrors({ invalid: true });
         this.form.controls['email'].markAsTouched();
         this.form.controls['email'].markAsDirty();
@@ -260,7 +271,7 @@ export class CriarUsuarioComponent {
           panelClass: ['error-snackbar'],
         });
       }
-      if(this.form.controls['nome'].invalid) {
+      if (this.form.controls['nome'].invalid) {
         this.form.controls['nome'].setErrors({ invalid: true });
         this.form.controls['nome'].markAsTouched();
         this.form.controls['nome'].markAsDirty();
@@ -270,7 +281,7 @@ export class CriarUsuarioComponent {
           panelClass: ['error-snackbar'],
         });
       }
-      if(this.form.controls['cargo'].invalid) {
+      if (this.form.controls['cargo'].invalid) {
         this.form.controls['cargo'].setErrors({ invalid: true });
         this.form.controls['cargo'].markAsTouched();
         this.form.controls['cargo'].markAsDirty();
@@ -282,6 +293,7 @@ export class CriarUsuarioComponent {
       }
     }
   }
+
   limpar() {
     this.form.reset();
     Object.keys(this.form.controls).forEach((key) => {

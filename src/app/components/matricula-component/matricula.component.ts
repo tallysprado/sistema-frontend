@@ -77,54 +77,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
           <div>
             <mat-form-field class="!w-full !m-3">
-              <mat-label>Cargo</mat-label>
-              <mat-select formControlName="cargo" name="cargo">
-                @for (cargo of cargos; track cargo) {
-                <mat-option [value]="cargo.value">{{
-                  cargo.viewValue
-                }}</mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <div>
-            <mat-form-field class="!w-full !m-3">
-              <mat-label>CPF</mat-label>
-              <input
-                size="small"
-                name="cpf"
-                matInput
-                type="text"
-                mask="999.999.999-99"
-                formControlName="cpf"
-              />
-              <mat-error *ngIf="form.controls['cpf'].invalid && form.controls['cpf'].touched"> CPF inválido </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div>
-            <mat-form-field class="!w-full !m-3">
-              <mat-label>RG</mat-label>
+              <mat-label>Matrícula</mat-label>
               <input
                 size="small"
                 matInput
                 type="text"
-                name="rg"
-                formControlName="rg"
-              />
-            </mat-form-field>
-          </div>
-
-          <div>
-            <mat-form-field class="!w-full !m-3">
-              <mat-label>E-mail</mat-label>
-              <input
-                size="small"
-                matInput
-                type="text"
-                name="email"
-                formControlName="email"
+                mask="A-9999999"
+                name="matricula"
+                (input)="onInput($event)"
+                style="text-transform: uppercase;"
+                formControlName="matricula"
               />
             </mat-form-field>
           </div>
@@ -132,8 +94,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
         <mat-divider></mat-divider>
         <div class="flex justify-end mt-3">
-          <button mat-flat-button class="mr-3" type="submit" >Salvar</button>
-          <button mat-flat-button mat-dialog-close type="button" (click)="limpar()">
+          <button mat-flat-button class="mr-3" type="submit">Salvar</button>
+          <button
+            mat-flat-button
+            mat-dialog-close
+            type="button"
+            (click)="limpar()"
+          >
             Limpar
           </button>
         </div>
@@ -170,11 +137,8 @@ export class MatriculaComponent {
     private usuarioService: UsuarioServiceService
   ) {
     this.form = this.fb.group({
-      nome: ['', Validators.required],
-      cargo: ['', Validators.required],
-      cpf: [''],
-      rg: [''],
-      email: ['', Validators.email],
+      nome: [''],
+      matricula: ['A - '],
     });
   }
   showSuccess() {
@@ -195,6 +159,24 @@ export class MatriculaComponent {
       panelClass: ['error-snackbar'],
     });
   }
+  onInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    let currentValue = inputElement.value;
+
+    // Garante que o valor sempre comece com "A-"
+    if (!currentValue.startsWith('A-')) {
+      currentValue = 'A-' + currentValue.replace(/^A-*/, ''); // Remove duplicatas e corrige
+    }
+
+    // Impede que o prefixo "A-" seja apagado
+    if (currentValue.length < 2) {
+      currentValue = 'A-';
+    }
+
+    // Atualiza o valor do formulário
+    this.form.get('matricula')?.setValue(currentValue, { emitEvent: false });
+    inputElement.value = currentValue;
+  }
   onSubmit() {
     console.log(this.form.value);
     if (this.form.valid) {
@@ -207,16 +189,16 @@ export class MatriculaComponent {
         },
         error: (err) => {
           console.log(err);
-          if(err.error.message!==undefined){
+          if (err.error.message !== undefined) {
             this.showErrorMessage(err.error.message);
-          }else{
+          } else {
             this.showError();
           }
         },
       });
     } else {
       console.log('Formulário inválido');
-      if(this.form.controls['cpf'].invalid) {
+      if (this.form.controls['cpf'].invalid) {
         this.form.controls['cpf'].setErrors({ invalid: true });
         this.form.controls['cpf'].markAsTouched();
         this.form.controls['cpf'].markAsDirty();
@@ -226,7 +208,7 @@ export class MatriculaComponent {
           panelClass: ['error-snackbar'],
         });
       }
-      if(this.form.controls['rg'].invalid) {
+      if (this.form.controls['rg'].invalid) {
         this.form.controls['rg'].setErrors({ invalid: true });
         this.form.controls['rg'].markAsTouched();
         this.form.controls['rg'].markAsDirty();
@@ -236,7 +218,7 @@ export class MatriculaComponent {
           panelClass: ['error-snackbar'],
         });
       }
-      if(this.form.controls['email'].invalid) {
+      if (this.form.controls['email'].invalid) {
         this.form.controls['email'].setErrors({ invalid: true });
         this.form.controls['email'].markAsTouched();
         this.form.controls['email'].markAsDirty();
@@ -246,7 +228,7 @@ export class MatriculaComponent {
           panelClass: ['error-snackbar'],
         });
       }
-      if(this.form.controls['nome'].invalid) {
+      if (this.form.controls['nome'].invalid) {
         this.form.controls['nome'].setErrors({ invalid: true });
         this.form.controls['nome'].markAsTouched();
         this.form.controls['nome'].markAsDirty();
@@ -256,7 +238,7 @@ export class MatriculaComponent {
           panelClass: ['error-snackbar'],
         });
       }
-      if(this.form.controls['cargo'].invalid) {
+      if (this.form.controls['cargo'].invalid) {
         this.form.controls['cargo'].setErrors({ invalid: true });
         this.form.controls['cargo'].markAsTouched();
         this.form.controls['cargo'].markAsDirty();
