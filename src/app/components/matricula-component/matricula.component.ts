@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -7,6 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { Aluno, GenericSelect } from '../../models/aluno.models';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {
   FormBuilder,
   FormControl,
@@ -19,8 +20,10 @@ import {
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { UsuarioServiceService } from '../../services/usuario/usuario-service.service';
-import { Usuario } from '../../models/usuario.models';
+import { IUsuario, Usuario } from '../../models/usuario.models';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { map, Observable, startWith } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -53,12 +56,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatButtonModule,
     ReactiveFormsModule,
     NgxMaskDirective,
+    MatAutocompleteModule,
+    AsyncPipe,
   ],
   template: `
     <div
       class="block card p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
     >
-      <h3 class="text-lg font-bold mb-4 ml-4 text-gray-500">Criar usuário</h3>
+      <h3 class="text-lg font-bold mb-4 ml-4 text-gray-500">
+        Matricular aluno
+      </h3>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div>
@@ -67,11 +74,20 @@ const ELEMENT_DATA: PeriodicElement[] = [
               <input
                 size="small"
                 matInput
+                placeholder="Digite o nome do aluno"
                 type="text"
                 name="nome"
                 style="text-transform: uppercase;"
                 formControlName="nome"
+                [formControl]="formControl"
+                [matAutocomplete]="auto"
+
               />
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onNameSelected($event.option.value)">
+                @for (option of filteredOptions | async; track option) {
+                <mat-option [value]="option">{{ option }}</mat-option>
+                }
+              </mat-autocomplete>
             </mat-form-field>
           </div>
 
@@ -122,9 +138,15 @@ const ELEMENT_DATA: PeriodicElement[] = [
     }
   `,
 })
-export class MatriculaComponent {
+export class MatriculaComponent implements OnInit {
   form: FormGroup;
+  formControl = new FormControl('');
   private _snackBar = inject(MatSnackBar);
+  options: string[] = [];
+  optionsUsuario: (IUsuario | null)[] = [];
+  aluno: IUsuario | null = null;
+
+  filteredOptions!: Observable<string[]>;
 
   cargos: GenericSelect[] = [
     { value: 0, viewValue: 'ALUNO' },
@@ -140,6 +162,37 @@ export class MatriculaComponent {
       nome: [''],
       matricula: ['A - '],
     });
+
+  }
+
+  onNameSelected(selectedName: string) {
+    const usuario = this.optionsUsuario.find((u) => u?.nome === selectedName);
+    if (usuario) {
+      this.form.get('matricula')?.setValue(usuario.aluno?.matricula?.charAt(0) + '-' + usuario.aluno?.matricula?.slice(1));
+    }
+  }
+
+  ngOnInit() {
+    this.filteredOptions = this.formControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value || ''))
+    );
+    this.usuarioService.findAll().subscribe((res) => {
+
+      this.optionsUsuario = res.filter(usuario => usuario.aluno).map(usuario => usuario);
+
+      this.options = res
+        .filter((usuario) => usuario.aluno)
+        .map((usuario) => usuario.nome);
+    });
+
+  }
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
   }
   showSuccess() {
     this._snackBar.open('Usuário criado com sucesso', 'Fechar', {

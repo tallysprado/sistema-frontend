@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Usuario } from '../../models/usuario.models';
+import { IUsuario, Usuario } from '../../models/usuario.models';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +18,7 @@ export class UsuarioServiceService {
     return this.http.post(`${this.api}/v1/usuario/filter`, usuario);
   }
 
-  findAll() {
-    return this.http.get(`${this.api}/v1/usuario/all`);
+  findAll() : Observable<IUsuario[]> {
+    return this.http.get<IUsuario[]>(`${this.api}/v1/usuario/all`);
   }
 }
