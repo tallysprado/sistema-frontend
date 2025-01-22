@@ -216,17 +216,14 @@ export class MatriculaComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     let currentValue = inputElement.value;
 
-    // Garante que o valor sempre comece com "A-"
     if (!currentValue.startsWith('A-')) {
       currentValue = 'A-' + currentValue.replace(/^A-*/, ''); // Remove duplicatas e corrige
     }
 
-    // Impede que o prefixo "A-" seja apagado
     if (currentValue.length < 2) {
       currentValue = 'A-';
     }
 
-    // Atualiza o valor do formulário
     this.form.get('matricula')?.setValue(currentValue, { emitEvent: false });
     inputElement.value = currentValue;
   }
