@@ -46,6 +46,7 @@ export class ToolbarComponent implements AfterViewInit, OnDestroy {
     private breakpointObserver: BreakpointObserver
   ) {}
 
+
   ngAfterViewInit() {
     this.breakpointSubscription = this.breakpointObserver
       .observe([Breakpoints.Handset])
