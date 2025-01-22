@@ -153,7 +153,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
           <button
             type="button"
             mat-flat-button
-            mat-dialog-close
             matTooltip="Limpar campos"
 
             (click)="limpar()"
@@ -192,7 +191,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
             } } @else if (column == 'Ações') {
             <button
               matTooltip="Editar"
-              class="text-blue-500 mr-2"
+              class="!text-gray-600"
               mat-icon-button
             >
               <mat-icon>edit</mat-icon>
@@ -200,7 +199,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
             <button
               matTooltip="Visualizar"
               (click)="openModal(element.id); $event.stopPropagation()"
-              class="text-blue-500"
+              class="!text-gray-600"
               mat-icon-button
             >
               <mat-icon>visibility</mat-icon>
@@ -214,7 +213,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
         <!-- Expanded Content Column -->
         <ng-container matColumnDef="expand">
-          <th mat-header-cell *matHeaderCellDef aria-label="row actions">
+          <th mat-header-cell
+          *matHeaderCellDef aria-label="row actions">
             &nbsp;
           </th>
           <td mat-cell *matCellDef="let element">
