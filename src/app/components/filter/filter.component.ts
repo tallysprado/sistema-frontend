@@ -230,8 +230,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
           </td>
         </ng-container>
 
-         <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-         <ng-container matColumnDef="expandedDetail">
+        <!-- Expanded Content Column -->
+        <ng-container matColumnDef="expandedDetail">
           <td
             mat-cell
             *matCellDef="let element"
@@ -259,10 +259,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
           mat-row
           *matRowDef="let element; columns: columnsToDisplayWithExpand"
           class="element-row"
-          [class.expanded-row]="expandedElement === element"
-          (click)="
-            expandedElement = expandedElement === element ? null : element
-          "
         ></tr>
         <tr
           mat-row
