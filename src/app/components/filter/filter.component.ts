@@ -25,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalComponent } from '../modal-component/modal-component.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -57,6 +58,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatTooltipModule,
     ModalComponent,
     ReactiveFormsModule,
+    MatButtonModule,
   ],
   animations: [
     trigger('detailExpand', [
@@ -141,7 +143,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
           <button
             type="submit"
             mat-flat-button
-            class="primary-button mr-3"
+            type
+            class="mr-3"
             matTooltip="Consultar usuários"
             (click)="findByFilter()"
           >
@@ -150,8 +153,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
           <button
             type="button"
             mat-flat-button
+            mat-dialog-close
             matTooltip="Limpar campos"
-            class="danger-button"
+
             (click)="limpar()"
           >
             Limpar
