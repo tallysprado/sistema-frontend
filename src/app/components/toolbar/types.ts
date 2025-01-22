@@ -6,3 +6,11 @@ export interface INavbarData {
   roles?: string[];
   items?: INavbarData[];
 }
+
+interface IFlatNode {
+  name: string;
+  routerLink: string;
+  roles?: string[];
+  children?: IFlatNode[];
+}
+

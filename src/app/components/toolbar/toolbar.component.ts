@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
 import { HasRolesDirective, KeycloakService } from 'keycloak-angular';
 import Keycloak from 'keycloak-js';
+import { MenuComponent } from '../menu/menu.component';
 @Component({
   selector: 'app-toolbar',
   imports: [
@@ -28,6 +29,7 @@ import Keycloak from 'keycloak-js';
     MatListModule,
     MenuListItemComponent,
     HasRolesDirective,
+    MenuComponent,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',

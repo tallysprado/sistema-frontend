@@ -21,9 +21,10 @@ import { KeycloakService } from 'keycloak-angular';
     MatButtonModule,
     CommonModule,
     HasRolesDirective,
+    MatButtonModule
   ],
   template: `
-  <div *ngIf="hasRealmRole(data.roles ? data.roles[0] : '')">
+    <div *ngIf="hasRealmRole(data.roles ? data.roles[0] : '')">
       <mat-accordion
         class="!w-full !p-0 !mt-0 !shadow-none !border-0 !rounded-none"
       >
@@ -35,17 +36,28 @@ import { KeycloakService } from 'keycloak-angular';
               {{ data.label }}
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <ng-container *ngIf="data.items && data.items.length > 0">
-            <mat-nav-list>
+          <ng-container
+            *ngIf="data.items && data.items.length > 0"
+            class="w-full p-0 m-0"
+          >
+            <mat-nav-list
+              class="!w-full !p-0 !mt-0 !shadow-none !border-0 !rounded-none"
+            >
               @for (link of data.items; track link) {
-              <div *ngIf="hasRealmRole(link.roles ? link.roles[0] : '')">
-              <button
-                (click)="navigateTo(link.routerLink)"
-                class="hover:bg-gray-200 hover:shadow-sm flex justify-content-around w-full p-2 mb-2"
+              <div
+                *ngIf="hasRealmRole(link.roles ? link.roles[0] : '')"
+                class="w-full p-0 m-0"
               >
-                <mat-icon class="ml-0 text-sm">{{ link.icon }} </mat-icon>
-                <label class="ml-5">{{ link.label }}</label>
-              </button>
+                <button
+                  (click)="navigateTo(link.routerLink)"
+                  class="hover:bg-gray-300 hover:shadow-lg flex
+                  active:bg-gray-400 active:shadow-inner
+                  transition-all duration-200 ease-in-out transform active:scale-98
+                  justify-content-around w-full p-2 mb-2"
+                >
+                  <mat-icon class="text-sm">{{ link.icon }} </mat-icon>
+                  <label class="ml-6">{{ link.label }}</label>
+                </button>
               </div>
               }
             </mat-nav-list>
@@ -53,10 +65,17 @@ import { KeycloakService } from 'keycloak-angular';
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-
   `,
   styles: [
     `
+      :host {
+        ::ng-deep {
+          .mat-expansion-panel-body {
+            padding: 0;
+            border-radius: 0;
+          }
+        }
+      }
       button {
         margin: 0;
         width: 100vh;
