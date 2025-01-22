@@ -22,11 +22,21 @@ export interface IUsuario {
   aluno: Aluno | null;
   professor: Professor | null;
   disciplinas: Disciplina[];
+  coordenador: Coordenador | null;
+  [key: string]: any; // Permite acessar propriedades dinâmicas
+
 }
 
 export type Professor = {
   id: number;
   nome: string;
+  matricula: string;
+}
+
+export type Coordenador = {
+  id: number;
+  nome: string;
+  matricula: string;
 }
 
 export type Disciplina = {

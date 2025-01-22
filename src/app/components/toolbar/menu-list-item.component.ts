@@ -55,8 +55,8 @@ import { KeycloakService } from 'keycloak-angular';
                   transition-all duration-200 ease-in-out transform active:scale-98
                   justify-content-around w-full p-2 mb-2"
                 >
-                  <mat-icon class="text-sm">{{ link.icon }} </mat-icon>
-                  <label class="ml-6">{{ link.label }}</label>
+                  <mat-icon class="ml-4 text-sm">{{ link.icon }} </mat-icon>
+                  <label class="ml-2">{{ link.label }}</label>
                 </button>
               </div>
               }

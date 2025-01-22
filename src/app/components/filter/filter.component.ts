@@ -159,116 +159,148 @@ const ELEMENT_DATA: PeriodicElement[] = [
         </div>
       </form>
     </div>
+
     <div class="overflow-auto">
-      <table
-        *ngIf="dataSource.length > 0"
-        mat-table
-        multiTemplateDataRows
-        [dataSource]="dataSource"
-        class="min-w-full divide-y divide-gray-200"
+  <table
+    *ngIf="dataSource.length > 0"
+    mat-table
+    multiTemplateDataRows
+    [dataSource]="dataSource"
+    class="min-w-full divide-y divide-gray-200 hidden md:table"
+  >
+    <!-- Loop das colunas -->
+    @for (column of displayedColumns; track column) {
+    <ng-container class="w-full md:w-1/4" matColumnDef="{{ column }}">
+      <th
+        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        mat-header-cell
+        *matHeaderCellDef
       >
-        @for (column of displayedColumns; track column) {
-        <ng-container class="!w-full md:!w-1/4" matColumnDef="{{ column }}">
-          <th
-            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            mat-header-cell
-            *matHeaderCellDef
-          >
+        {{ column.toUpperCase() }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        @if (column == 'Matrícula') {
+        @if (element.aluno) {
+        {{ element.aluno.matricula }}
+        } @else if (element.professor) {
+        {{ element.professor.matricula }}
+        } @else if (element.coordenador) {
+        {{ element.coordenador.matricula }}
+        }
+        } @else if (column == 'Ações') {
+        <button
+          matTooltip="Editar"
+          class="text-blue-500 mr-2"
+          mat-icon-button
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          matTooltip="Visualizar"
+          (click)="openModal(element.id); $event.stopPropagation()"
+          class="text-blue-500"
+          mat-icon-button
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
+        } @else {
+        {{ element[column.toLocaleLowerCase()] }}
+        }
+      </td>
+    </ng-container>
+    }
+    <!-- Exibição de detalhes expandida -->
+    <ng-container matColumnDef="expand">
+      <th mat-header-cell *matHeaderCellDef aria-label="row actions">
+        &nbsp;
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <button
+          mat-icon-button
+          aria-label="expand row"
+          matTooltip="Visualizar disciplinas"
+          (click)="
+            expandedElement = expandedElement === element ? null : element;
+            $event.stopPropagation()
+          "
+        >
+          @if (expandedElement === element) {
+          <mat-icon>keyboard_arrow_up</mat-icon>
+          } @else {
+          <mat-icon>keyboard_arrow_down</mat-icon>
+          }
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+    <tr
+      mat-row
+      *matRowDef="let element; columns: columnsToDisplayWithExpand"
+      class="element-row"
+      [class.expanded-row]="expandedElement === element"
+      (click)="
+        expandedElement = expandedElement === element ? null : element
+      "
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['expandedDetail']"
+      class="detail-row"
+    ></tr>
+  </table>
+
+  <!-- Mobile View -->
+  <div class="block md:hidden">
+    <div
+      *ngFor="let element of dataSource"
+      class="border rounded-lg mb-4 p-4 shadow"
+    >
+      <div class="font-bold text-gray-700">
+        {{ element.nome || 'Sem Nome' }}
+      </div>
+      <div *ngFor="let column of displayedColumns">
+        @if (column !== 'Ações' && column !== 'expand') {
+        <div class="flex justify-between">
+          <span class="font-medium text-gray-600">
             {{ column.toUpperCase() }}
-          </th>
-          <td mat-cell *matCellDef="let element">
-            @if(column == 'Matrícula'){ @if(element.aluno){
+          </span>
+          <span class="text-gray-800">
+            @if (column == 'Matrícula') {
+            @if (element.aluno) {
             {{ element.aluno.matricula }}
-            } @else if (element.professor){
+            } @else if (element.professor) {
             {{ element.professor.matricula }}
-            } @else if (element.coordenador){
+            } @else if (element.coordenador) {
             {{ element.coordenador.matricula }}
-            } } @if(column == 'Ações'){
-            <button
-              matTooltip="Editar"
-              class="text-blue-500 mr-2"
-              mat-icon-button
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              matTooltip="Visualizar"
-              (click)="openModal(element.id); $event.stopPropagation()"
-              class="text-blue-500"
-              mat-icon-button
-            >
-              <mat-icon>visibility</mat-icon>
-            </button>
-            } @else{
+            }
+            } @else {
             {{ element[column.toLocaleLowerCase()] }}
             }
-          </td>
-        </ng-container>
+          </span>
+        </div>
         }
-        <ng-container matColumnDef="expand">
-          <th mat-header-cell *matHeaderCellDef aria-label="row actions">
-            &nbsp;
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <button
-              mat-icon-button
-              aria-label="expand row"
-              matTooltip="Visualizar disciplinas"
-              (click)="
-                expandedElement = expandedElement === element ? null : element;
-                $event.stopPropagation()
-              "
-            >
-              @if (expandedElement === element) {
-              <mat-icon>keyboard_arrow_up</mat-icon>
-              } @else {
-              <mat-icon>keyboard_arrow_down</mat-icon>
-              }
-            </button>
-          </td>
-        </ng-container>
-
-        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-        <ng-container matColumnDef="expandedDetail">
-          <td
-            mat-cell
-            *matCellDef="let element"
-            [attr.colspan]="columnsToDisplayWithExpand.length"
-          >
-            <div
-              class="flex overflow-hidden flex flex-col"
-              [@detailExpand]="
-                element == expandedElement ? 'expanded' : 'collapsed'
-              "
-            >
-              <div
-                class="!flex !flex-col !w-full"
-                *ngFor="let disciplina of element.disciplinas; let i = index"
-              >
-                {{ i + 1 }} - {{ disciplina.nome }}
-              </div>
-              <br />
-            </div>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
-        <tr
-          mat-row
-          *matRowDef="let element; columns: columnsToDisplayWithExpand"
-          class="element-row"
-          [class.expanded-row]="expandedElement === element"
-          (click)="
-            expandedElement = expandedElement === element ? null : element
-          "
-        ></tr>
-        <tr
-          mat-row
-          *matRowDef="let row; columns: ['expandedDetail']"
-          class="detail-row"
-        ></tr>
-      </table>
+      </div>
+      <div class="mt-4">
+        <button
+          matTooltip="Editar"
+          class="text-blue-500 mr-2"
+          mat-icon-button
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          matTooltip="Visualizar"
+          (click)="openModal(element.id); $event.stopPropagation()"
+          class="text-blue-500"
+          mat-icon-button
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
+      </div>
     </div>
+  </div>
+</div>
+
   `,
   styles: `
     .table {
