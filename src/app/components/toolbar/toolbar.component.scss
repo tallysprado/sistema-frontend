@@ -7,6 +7,7 @@
   width: 100%;
 }
 
+
 .sidenav-content {
   display: flex;
   width: 100%;
@@ -36,3 +37,17 @@ mat-list-item:hover {
   background-color: #e0e0e0;
   width: 100%;
 }
+mat-accordion mat-expansion-panel mat-panel-title mat-expansion-panel-header mat-list-item mat-list-item-content mat-list {
+  border-radius: 0;
+}
+
+
+@media (max-width: 768px) {
+
+  .sidenav-container {
+    width: 150px;
+    height: 100%;
+    width: 100%;
+  }
+}
+
