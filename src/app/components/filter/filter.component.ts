@@ -207,7 +207,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
           </td>
         </ng-container>
         }
-        <!-- Exibição de detalhes expandida -->
+
+        <!-- Expanded Content Column -->
         <ng-container matColumnDef="expand">
           <th mat-header-cell *matHeaderCellDef aria-label="row actions">
             &nbsp;
@@ -230,7 +231,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
           </td>
         </ng-container>
 
-        <!-- Expanded Content Column -->
         <ng-container matColumnDef="expandedDetail">
           <td
             mat-cell
