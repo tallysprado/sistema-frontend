@@ -3,11 +3,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { Aluno, GenericSelect } from '../../models/aluno.models';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   FormBuilder,
   FormControl,
@@ -24,6 +25,9 @@ import { IUsuario, Usuario } from '../../models/usuario.models';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { map, Observable, startWith } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { MatriculaService } from '../../services/matricula.service';
+import { DisciplinaElement } from '../../models/disciplina.models';
+import { SelectionModel } from '@angular/cdk/collections';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -50,6 +54,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
+    MatCheckboxModule,
     MatDividerModule,
     FormsModule,
     MatSelectModule,
@@ -81,9 +86,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 formControlName="nome"
                 [formControl]="formControl"
                 [matAutocomplete]="auto"
-
               />
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onNameSelected($event.option.value)">
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="onNameSelected($event.option.value)"
+              >
                 @for (option of filteredOptions | async; track option) {
                 <mat-option [value]="option">{{ option }}</mat-option>
                 }
@@ -121,6 +128,57 @@ const ELEMENT_DATA: PeriodicElement[] = [
           </button>
         </div>
       </form>
+
+      <div *ngIf="dataSource.data.length > 0">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox
+                (change)="$event ? toggleAllRows() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                [aria-label]="checkboxLabel()"
+              >
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+                [aria-label]="checkboxLabel(row)"
+              >
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef>Nome</th>
+            <td mat-cell *matCellDef="let element">{{ element.nome }}</td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="descricao">
+            <th mat-header-cell *matHeaderCellDef>Descrição</th>
+            <td mat-cell *matCellDef="let element">{{ element.descricao }}</td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="carga">
+            <th mat-header-cell *matHeaderCellDef>Carga Horária</th>
+            <td mat-cell *matCellDef="let element">{{ element.cargaHoraria }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="selection.toggle(row)"
+          ></tr>
+        </table>
+      </div>
     </div>
   `,
   styles: `
@@ -141,10 +199,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class MatriculaComponent implements OnInit {
   form: FormGroup;
   formControl = new FormControl('');
+  disciplinaData: DisciplinaElement[] = [];
+  dataSource = new MatTableDataSource<DisciplinaElement>(this.disciplinaData);
   private _snackBar = inject(MatSnackBar);
   options: string[] = [];
   optionsUsuario: (IUsuario | null)[] = [];
   aluno: IUsuario | null = null;
+  displayedColumns: string[] = ['nome', 'descricao', 'carga'];
+  selection = new SelectionModel<DisciplinaElement>(true, []);
 
   filteredOptions!: Observable<string[]>;
 
@@ -153,22 +215,30 @@ export class MatriculaComponent implements OnInit {
     { value: 1, viewValue: 'PROFESSOR' },
     { value: 2, viewValue: 'COORDENADOR' },
   ];
-  dataSource = ELEMENT_DATA;
   constructor(
     private fb: FormBuilder,
-    private usuarioService: UsuarioServiceService
+    private usuarioService: UsuarioServiceService,
+    private matriculaService: MatriculaService
   ) {
     this.form = this.fb.group({
       nome: [''],
       matricula: ['A - '],
     });
-
+    this.matriculaService.findAllDisciplinas().subscribe((res) => {
+      this.disciplinaData = res as DisciplinaElement[];
+    });
   }
 
   onNameSelected(selectedName: string) {
     const usuario = this.optionsUsuario.find((u) => u?.nome === selectedName);
     if (usuario) {
-      this.form.get('matricula')?.setValue(usuario.aluno?.matricula?.charAt(0) + '-' + usuario.aluno?.matricula?.slice(1));
+      this.form
+        .get('matricula')
+        ?.setValue(
+          usuario.aluno?.matricula?.charAt(0) +
+            '-' +
+            usuario.aluno?.matricula?.slice(1)
+        );
     }
   }
 
@@ -177,14 +247,19 @@ export class MatriculaComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value || ''))
     );
+    this.matriculaService.findAllDisciplinas().subscribe((res) => {
+      this.disciplinaData = res as DisciplinaElement[];
+    });
     this.usuarioService.findAll().subscribe((res) => {
+      this.optionsUsuario = res
+        .filter((usuario) => usuario.aluno)
+        .map((usuario) => usuario);
 
-      this.optionsUsuario = res.filter(usuario => usuario.aluno).map(usuario => usuario);
-
-      this.options = res
+        this.options = res
         .filter((usuario) => usuario.aluno)
         .map((usuario) => usuario.nome);
     });
+
 
   }
   private _filter(value: string): string[] {
@@ -211,6 +286,27 @@ export class MatriculaComponent implements OnInit {
       duration: 3000,
       panelClass: ['error-snackbar'],
     });
+  }
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
+  }
+  checkboxLabel(row?: DisciplinaElement): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
   onInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -302,6 +398,7 @@ export class MatriculaComponent implements OnInit {
   }
   limpar() {
     this.form.reset();
+    this.form.controls['matricula'].setValue('A - ');
     Object.keys(this.form.controls).forEach((key) => {
       const control = this.form.get(key);
       control?.setErrors(null);
