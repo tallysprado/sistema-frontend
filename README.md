@@ -17,7 +17,7 @@ npm install -f
 npm start
 ```
 
-Após execucão, acessar o sistema front end em `http://localhost:4200/`.
+Após execução, acessar o sistema front end em `http://localhost:4200/`.
 
 #### Cenários de teste:
 - Menu "Usuários -> Criar":
