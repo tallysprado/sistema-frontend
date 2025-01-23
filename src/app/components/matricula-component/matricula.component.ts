@@ -8,7 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { Aluno, GenericSelect } from '../../models/aluno.models';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import {
   FormBuilder,
   FormControl,
@@ -24,28 +24,13 @@ import { UsuarioServiceService } from '../../services/usuario/usuario-service.se
 import { IUsuario, Usuario } from '../../models/usuario.models';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { map, Observable, startWith } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { MatriculaService } from '../../services/matricula.service';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { IMatricula, MatriculaService } from '../../services/matricula.service';
 import { DisciplinaElement } from '../../models/disciplina.models';
 import { SelectionModel } from '@angular/cdk/collections';
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-filter',
   providers: [provideNgxMask()],
@@ -63,6 +48,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     NgxMaskDirective,
     MatAutocompleteModule,
     AsyncPipe,
+    CommonModule,
   ],
   template: `
     <div
@@ -116,7 +102,65 @@ const ELEMENT_DATA: PeriodicElement[] = [
         </div>
 
         <mat-divider></mat-divider>
-        <div class="flex justify-end mt-3">
+
+        <ng-container
+          *ngIf="dataSource && dataSource.data.length > 0 && usuario != null"
+        >
+          <table
+            mat-table
+            [dataSource]="dataSource"
+            class="overflow-y-auto mat-elevation-z8 mt-6"
+          >
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox
+                  (change)="$event ? toggleAllRows() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  [aria-label]="checkboxLabel()"
+                >
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox
+                  (click)="$event.stopPropagation()"
+                  (change)="onCheckboxChange($event, row)"
+                  [checked]="selection.isSelected(row)"
+                  [aria-label]="checkboxLabel(row)"
+                >
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nome">
+              <th mat-header-cell *matHeaderCellDef>Nome</th>
+              <td mat-cell *matCellDef="let element">{{ element.nome }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="descricao">
+              <th mat-header-cell *matHeaderCellDef>Descrição</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.descricao }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="carga">
+              <th mat-header-cell *matHeaderCellDef>Carga Horária</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.cargaHoraria }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              (click)="selection.toggle(row)"
+            ></tr>
+          </table>
+        </ng-container>
+
+        <div class="flex justify-end mt-4">
           <button mat-flat-button class="mr-3" type="submit">Salvar</button>
           <button
             mat-flat-button
@@ -128,57 +172,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
           </button>
         </div>
       </form>
-
-      <div *ngIf="dataSource.data.length > 0">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-          <!-- Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox
-                (change)="$event ? toggleAllRows() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-                [aria-label]="checkboxLabel()"
-              >
-              </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let row">
-              <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)"
-                [aria-label]="checkboxLabel(row)"
-              >
-              </mat-checkbox>
-            </td>
-          </ng-container>
-
-          <!-- Position Column -->
-          <ng-container matColumnDef="nome">
-            <th mat-header-cell *matHeaderCellDef>Nome</th>
-            <td mat-cell *matCellDef="let element">{{ element.nome }}</td>
-          </ng-container>
-
-          <!-- Name Column -->
-          <ng-container matColumnDef="descricao">
-            <th mat-header-cell *matHeaderCellDef>Descrição</th>
-            <td mat-cell *matCellDef="let element">{{ element.descricao }}</td>
-          </ng-container>
-
-          <!-- Weight Column -->
-          <ng-container matColumnDef="carga">
-            <th mat-header-cell *matHeaderCellDef>Carga Horária</th>
-            <td mat-cell *matCellDef="let element">{{ element.cargaHoraria }}</td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr
-            mat-row
-            *matRowDef="let row; columns: displayedColumns"
-            (click)="selection.toggle(row)"
-          ></tr>
-        </table>
-      </div>
     </div>
   `,
   styles: `
@@ -199,16 +192,15 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class MatriculaComponent implements OnInit {
   form: FormGroup;
   formControl = new FormControl('');
-  disciplinaData: DisciplinaElement[] = [];
-  dataSource = new MatTableDataSource<DisciplinaElement>(this.disciplinaData);
+  dataSource = new MatTableDataSource<DisciplinaElement>([]);
   private _snackBar = inject(MatSnackBar);
   options: string[] = [];
   optionsUsuario: (IUsuario | null)[] = [];
-  aluno: IUsuario | null = null;
-  displayedColumns: string[] = ['nome', 'descricao', 'carga'];
+  displayedColumns: string[] = ['select', 'nome', 'descricao', 'carga'];
   selection = new SelectionModel<DisciplinaElement>(true, []);
-
+  usuario: IUsuario | null | undefined;
   filteredOptions!: Observable<string[]>;
+  disciplinasMatriculadas: DisciplinaElement[] = [];
 
   cargos: GenericSelect[] = [
     { value: 0, viewValue: 'ALUNO' },
@@ -218,26 +210,91 @@ export class MatriculaComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioServiceService,
-    private matriculaService: MatriculaService
+    private matriculaService: MatriculaService,
+    private dialog: MatDialog
   ) {
     this.form = this.fb.group({
       nome: [''],
       matricula: ['A - '],
     });
-    this.matriculaService.findAllDisciplinas().subscribe((res) => {
-      this.disciplinaData = res as DisciplinaElement[];
+  }
+  onCheckboxChange(event: MatCheckboxChange, row: DisciplinaElement): void {
+    event.source.checked = this.selection.isSelected(row);
+
+    if (!event.checked && this.selection.isSelected(row)) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Confirmar remoção de seleção',
+          message: `Tem certeza que deseja remover a disciplina "${row.nome}"?`,
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.selection.deselect(row);
+          event.source.checked = false;
+        } else {
+          event.source.checked = true;
+        }
+      });
+    } else if (event.checked) {
+      // Marca o item normalmente
+      this.selection.select(row);
+    }
+  }
+
+
+
+  openConfirmDialog() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirmar remoção de matrícula',
+        message: 'Tem certeza que deseja remover o aluno da disciplina?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('Dialog closed', result);
     });
   }
 
   onNameSelected(selectedName: string) {
-    const usuario = this.optionsUsuario.find((u) => u?.nome === selectedName);
-    if (usuario) {
+    this.usuario = this.optionsUsuario.find((u) => u?.nome === selectedName);
+    if (this.dataSource.data.length === 0) {
+      this.obterDisciplinas();
+    }
+    if (this.usuario) {
+      this.matriculaService
+        .findDisciplinasMatriculadas(this.usuario.id)
+        .subscribe((matriculadas) => {
+          this.disciplinasMatriculadas = matriculadas as DisciplinaElement[];
+
+          this.matriculaService
+            .findAllDisciplinas()
+            .subscribe((todasDisciplinas) => {
+              const disciplinasOrdenadas = [
+                ...this.disciplinasMatriculadas,
+                ...this.dataSource.data.filter(
+                  (disciplina) =>
+                    !this.disciplinasMatriculadas.some(
+                      (mat) => mat.id === disciplina.id
+                    )
+                ),
+              ];
+
+              this.dataSource.data = disciplinasOrdenadas;
+
+              this.selection.clear();
+              this.selection.select(...this.disciplinasMatriculadas);
+            });
+        });
+
       this.form
         .get('matricula')
         ?.setValue(
-          usuario.aluno?.matricula?.charAt(0) +
+          this.usuario.aluno?.matricula?.charAt(0) +
             '-' +
-            usuario.aluno?.matricula?.slice(1)
+            this.usuario.aluno?.matricula?.slice(1)
         );
     }
   }
@@ -247,21 +304,23 @@ export class MatriculaComponent implements OnInit {
       startWith(''),
       map((value) => this._filter(value || ''))
     );
-    this.matriculaService.findAllDisciplinas().subscribe((res) => {
-      this.disciplinaData = res as DisciplinaElement[];
-    });
+    this.obterDisciplinas();
     this.usuarioService.findAll().subscribe((res) => {
       this.optionsUsuario = res
         .filter((usuario) => usuario.aluno)
         .map((usuario) => usuario);
 
-        this.options = res
+      this.options = res
         .filter((usuario) => usuario.aluno)
         .map((usuario) => usuario.nome);
     });
-
-
   }
+  private obterDisciplinas() {
+    this.matriculaService.findAllDisciplinas().subscribe((res) => {
+      this.dataSource.data = res as DisciplinaElement[];
+    });
+  }
+
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
@@ -270,19 +329,19 @@ export class MatriculaComponent implements OnInit {
     );
   }
   showSuccess() {
-    this._snackBar.open('Usuário criado com sucesso', 'Fechar', {
+    this._snackBar.open('Aluno matriculado com sucesso', 'Fechar', {
       duration: 3000,
       panelClass: ['success-snackbar'],
     });
   }
   showError() {
-    this._snackBar.open('Erro ao criar usuário', 'Fechar', {
+    this._snackBar.open('Erro ao matricular aluno', 'Fechar', {
       duration: 3000,
       panelClass: ['error-snackbar'],
     });
   }
   showErrorMessage(message: string) {
-    this._snackBar.open('Erro ao criar usuário: ' + message, 'Fechar', {
+    this._snackBar.open('Erro ao matricular aluno: ' + message, 'Fechar', {
       duration: 3000,
       panelClass: ['error-snackbar'],
     });
@@ -293,7 +352,6 @@ export class MatriculaComponent implements OnInit {
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -306,7 +364,9 @@ export class MatriculaComponent implements OnInit {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+      row.position + 1
+    }`;
   }
   onInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -324,80 +384,22 @@ export class MatriculaComponent implements OnInit {
     inputElement.value = currentValue;
   }
   onSubmit() {
-    console.log(this.form.value);
-    if (this.form.valid) {
-      console.log('Formulário válido');
-      const formData = this.form.value;
-      this.usuarioService.criarUsuario(formData).subscribe({
-        next: (res) => {
-          console.log(res);
-          this.showSuccess();
-        },
-        error: (err) => {
-          console.log(err);
-          if (err.error.message !== undefined) {
-            this.showErrorMessage(err.error.message);
-          } else {
-            this.showError();
-          }
-        },
-      });
-    } else {
-      console.log('Formulário inválido');
-      if (this.form.controls['cpf'].invalid) {
-        this.form.controls['cpf'].setErrors({ invalid: true });
-        this.form.controls['cpf'].markAsTouched();
-        this.form.controls['cpf'].markAsDirty();
-        this.form.controls['cpf'].updateValueAndValidity();
-        this._snackBar.open('CPF inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }
-      if (this.form.controls['rg'].invalid) {
-        this.form.controls['rg'].setErrors({ invalid: true });
-        this.form.controls['rg'].markAsTouched();
-        this.form.controls['rg'].markAsDirty();
-        this.form.controls['rg'].updateValueAndValidity();
-        this._snackBar.open('RG inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }
-      if (this.form.controls['email'].invalid) {
-        this.form.controls['email'].setErrors({ invalid: true });
-        this.form.controls['email'].markAsTouched();
-        this.form.controls['email'].markAsDirty();
-        this.form.controls['email'].updateValueAndValidity();
-        this._snackBar.open('E-mail inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }
-      if (this.form.controls['nome'].invalid) {
-        this.form.controls['nome'].setErrors({ invalid: true });
-        this.form.controls['nome'].markAsTouched();
-        this.form.controls['nome'].markAsDirty();
-        this.form.controls['nome'].updateValueAndValidity();
-        this._snackBar.open('Nome inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }
-      if (this.form.controls['cargo'].invalid) {
-        this.form.controls['cargo'].setErrors({ invalid: true });
-        this.form.controls['cargo'].markAsTouched();
-        this.form.controls['cargo'].markAsDirty();
-        this.form.controls['cargo'].updateValueAndValidity();
-        this._snackBar.open('Cargo inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }
-    }
+    const matricula: IMatricula = {
+      idAluno: this.usuario?.id ?? null,
+      idDisciplinas: this.selection.selected.map((disciplina) => disciplina.id),
+      status: true,
+    };
+    this.matriculaService.matricular(matricula).subscribe((res) => {
+      this.showSuccess();
+    });
   }
   limpar() {
     this.form.reset();
+    this.dataSource.data = [];
+    this.selection.clear();
+    this.disciplinasMatriculadas = [];
+    this.usuario = null;
+    this.obterDisciplinas();
     this.form.controls['matricula'].setValue('A - ');
     Object.keys(this.form.controls).forEach((key) => {
       const control = this.form.get(key);
