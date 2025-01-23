@@ -5,8 +5,13 @@ import { ConsultarUsuarioComponent } from './pages/consultar-usuario/consultar-u
 import { CriarUsuarioComponent } from './components/criar-usuario/criar-usuario.component';
 import { MatriculaComponent } from './components/matricula-component/matricula.component';
 import { canActivateAuthRole } from './guard/auth.guard.routes';
+import { ForbiddenComponent } from './pages/forbidden/forbidden/forbidden.component';
 
 export const routes: Routes = [
+  {
+    path: 'forbidden',
+    component: ForbiddenComponent,
+  },
   {
     path: 'users/create',
     canActivate: [canActivateAuthRole],

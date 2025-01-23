@@ -46,18 +46,20 @@ export const navbarData: INavbarData[] = [
   {
     routerLink: 'periodo',
     icon: 'fal fa-user',
-    label: 'Semestre',
-    roles: ['estudante'],
+    label: 'Grade Curricular',
+    roles: ['aluno'],
     items: [
       {
         routerLink: 'periodo/create',
         label: 'Disciplina',
-        roles: ['estudante'],
+        icon: 'book',
+        roles: ['aluno'],
       },
       {
         routerLink: 'periodo/search',
         label: 'Consultar',
-        roles: ['estudante'],
+        icon: 'search',
+        roles: ['aluno'],
       },
     ],
   },
