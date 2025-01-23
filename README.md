@@ -39,3 +39,4 @@ Após execução, acessar o sistema front end em `http://localhost:4200/`.
     - Campo de filtro "matrícula" ainda está em construção :construction:
     - Responsividade da tabela, para dispositivos mobile, ainda em construção :construction:
 - Menu da Topbar abrirá "por cima" do conteúdo em dispositivos mobile, e "empurrará" o conteúdo telas maiores.
+- Tela de Login foi customizada direto no .ftl e não exibe logo marca em dispositivos móveis, apenas em telas maiores.
