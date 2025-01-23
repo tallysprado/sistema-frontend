@@ -19,6 +19,12 @@ import Keycloak from 'keycloak-js';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-toolbar',
+  providers: [
+    {
+      provide: KeycloakService,
+      useValue: new KeycloakService(),
+    },
+  ],
   imports: [
     RouterModule,
     CommonModule,
@@ -29,7 +35,9 @@ import { Subscription } from 'rxjs';
     MatButtonModule,
     MatListModule,
     MenuListItemComponent,
+    KeycloakAngularModule,
   ],
+
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })
@@ -44,7 +52,6 @@ export class ToolbarComponent implements AfterViewInit, OnDestroy {
     private keycloak: Keycloak,
     private breakpointObserver: BreakpointObserver
   ) {}
-
 
   ngAfterViewInit() {
     this.breakpointSubscription = this.breakpointObserver
