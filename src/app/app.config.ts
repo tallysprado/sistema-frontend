@@ -28,7 +28,6 @@ import {
   INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
   includeBearerTokenInterceptor,
 } from 'keycloak-angular';
-import { AuthGuard } from './guard/auth.guard';
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -5,7 +5,6 @@ import { RouterOutlet } from '@angular/router';
 import { ToolbarComponent } from "./components/toolbar/toolbar.component";
 import { KeycloakService } from 'keycloak-angular';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthGuard } from './guard/auth.guard';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -16,7 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
   imports: [ToolbarComponent, ToolbarComponent, HttpClientModule, KeycloakAngularModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers: [AuthGuard, KeycloakService],
+  providers: [KeycloakService],
 
 })
 export class AppComponent {

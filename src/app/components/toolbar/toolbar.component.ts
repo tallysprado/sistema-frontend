@@ -17,7 +17,6 @@ import { jwtDecode } from 'jwt-decode';
 import { HasRolesDirective, KeycloakService } from 'keycloak-angular';
 import Keycloak from 'keycloak-js';
 import { Subscription } from 'rxjs';
-import { AuthGuard } from '../../guard/auth.guard';
 @Component({
   selector: 'app-toolbar',
   providers: [
