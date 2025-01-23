@@ -38,3 +38,4 @@ Após execução, acessar o sistema front end em `http://localhost:4200/`.
     e as matriculadas. Selecionar e salvar vai atualizar os dados da linha expandível da tela de filtros.
     - Campo de filtro "matrícula" ainda está em construção :construction:
     - Responsividade da tabela, para dispositivos mobile, ainda em construção :construction:
+- Menu da Topbar abrirá "por cima" do conteúdo em dispositivos mobile, e "empurrará" o conteúdo telas maiores.
