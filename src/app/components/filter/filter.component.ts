@@ -415,7 +415,7 @@ export class FilterComponent {
       this.dataSource = (res as IUsuario[]).map(usuario => {
         return {
           ...usuario,
-          disciplinas: usuario.disciplinas || []
+          disciplinas: usuario.aluno ? usuario.aluno.disciplinas : []
         };
       });
 

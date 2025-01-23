@@ -1,4 +1,4 @@
-import { IUsuario, Usuario } from "./usuario.models";
+import { Disciplina, IUsuario, Usuario } from "./usuario.models";
 
 export type Aluno = {
   id: number | null;
@@ -8,6 +8,7 @@ export type Aluno = {
   rg: string | null;
   email: string | null;
   disciplina: string | null;
+  disciplinas: Disciplina[];
 }
 
 export interface IAluno  {
