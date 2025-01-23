@@ -131,15 +131,17 @@ import { ActivatedRoute } from '@angular/router';
 
         <mat-divider></mat-divider>
         <div class="flex justify-end mt-3">
-          <button mat-flat-button class="mr-3" type="submit">Salvar</button>
           <button
             mat-flat-button
             mat-dialog-close
             type="button"
+            class="mr-5"
             (click)="limpar()"
           >
             Limpar
           </button>
+          <button mat-flat-button  type="submit">Salvar</button>
+
         </div>
       </form>
     </div>
