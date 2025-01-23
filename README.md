@@ -27,11 +27,11 @@ Após execucão, acessar o sistema front end em `http://localhost:4200/`.
     - Enter ao salvar.
     - Responsividade dos campos (4 colunas telas largas, 1 coluna disp. mobile)
 - Menu "Usuários -> Consultar":
-    - A edição está incompleta
-    - O filtro da matrícula é um inner join a depender do tipo se é Aluno, Professor ou Coordenador
     - Expandir a linha mostra disciplinas matriculadas.
     - Responsividade mobile para filtros e tabela (é exibido cards com as colunas no lugar das linhas na visualização
     em dispositivos móveis).
+    - A edição está incompleta em construção 🏗️ os dados apenas são carregados na tela de criar.
+    - O filtro da matrícula é um inner join a depender do tipo se é Aluno, Professor ou Coordenador
 - Menu "Matrícula - Aluno":
     - É listado apenas entidade Aluno.
     - Nome é auto-complete com os alunos cadastrados, ao selecionar deve aparecer a lista de disciplinas disponíveis
