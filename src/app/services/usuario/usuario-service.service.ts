@@ -18,6 +18,10 @@ export class UsuarioServiceService {
     return this.http.post(`${this.api}/v1/usuario/filter`, usuario);
   }
 
+  updateUsuario(id: number, usuario: Usuario) {
+    return this.http.put(`${this.api}/v1/usuario/update/${id}`, usuario);
+  }
+
   findAll() : Observable<IUsuario[]> {
     return this.http.get<IUsuario[]>(`${this.api}/v1/usuario/all`);
   }
