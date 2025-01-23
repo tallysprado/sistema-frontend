@@ -143,23 +143,22 @@ const ELEMENT_DATA: PeriodicElement[] = [
         <mat-divider></mat-divider>
         <div class="flex justify-end mt-3">
           <button
+            type="button"
+            mat-flat-button
+            matTooltip="Limpar campos"
+            class="mr-5"
+            (click)="limpar()"
+          >
+            Limpar
+          </button>
+          <button
             type="submit"
             mat-flat-button
             type
-            class="mr-3"
             matTooltip="Consultar usuários"
             (click)="findByFilter()"
           >
             Consultar
-          </button>
-          <button
-            type="button"
-            mat-flat-button
-            matTooltip="Limpar campos"
-
-            (click)="limpar()"
-          >
-            Limpar
           </button>
         </div>
       </form>

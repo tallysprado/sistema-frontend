@@ -171,15 +171,17 @@ import { AlunoServiceService } from '../../services/aluno/aluno-service.service'
         </ng-container>
 
         <div class="flex justify-end mt-4">
-          <button mat-flat-button class="mr-3" type="submit">Salvar</button>
           <button
             mat-flat-button
             mat-dialog-close
+            class="mr-5"
             type="button"
             (click)="limpar()"
           >
             Limpar
           </button>
+          <button mat-flat-button  type="submit">Salvar</button>
+
         </div>
       </form>
     </div>
