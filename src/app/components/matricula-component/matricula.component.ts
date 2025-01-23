@@ -276,7 +276,7 @@ export class MatriculaComponent implements OnInit {
     }
     if (this.usuario) {
       this.matriculaService
-        .findDisciplinasMatriculadas(this.usuario.id)
+        .findDisciplinasMatriculadas(this.usuario.aluno?.id ?? 0)
         .subscribe((matriculadas) => {
           this.disciplinasMatriculadas = matriculadas as DisciplinaElement[];
 
@@ -326,6 +326,7 @@ export class MatriculaComponent implements OnInit {
         .map((usuario) => usuario.nome);
     });
   }
+
   private obterDisciplinas() {
     this.matriculaService.findAllDisciplinas().subscribe((res) => {
       this.dataSource.data = res as DisciplinaElement[];
@@ -391,11 +392,6 @@ export class MatriculaComponent implements OnInit {
       currentValue = 'A-';
     }
 
-    if(currentValue.length  ===9){
-      this.alunoService.findByMatricula(currentValue.slice(2)).subscribe((res) => {
-        let aluno = res as IAluno;
-      });
-    }
 
     this.form.get('matricula')?.setValue(currentValue, { emitEvent: false });
     inputElement.value = currentValue;

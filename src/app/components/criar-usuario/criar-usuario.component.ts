@@ -290,6 +290,7 @@ export class CriarUsuarioComponent implements OnInit {
         });
       }
     }
+    this.limpar();
   }
 
   limpar() {

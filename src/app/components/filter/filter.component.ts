@@ -412,11 +412,17 @@ export class FilterComponent {
 
   findAluno() {
     this.usuarioService.findAll().subscribe((res) => {
-      this.dataSource = res as IUsuario[];
+      this.dataSource = (res as IUsuario[]).map(usuario => {
+        return {
+          ...usuario,
+          disciplinas: usuario.disciplinas || []
+        };
+      });
 
-      console.log(res);
+      console.log(this.dataSource);
     });
   }
+
 
   limpar() {
     this.form.reset();
