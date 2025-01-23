@@ -44,7 +44,9 @@ import { ActivatedRoute } from '@angular/router';
     <div
       class="block card p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
     >
-      <h3 class="text-lg font-bold mb-4 ml-4 text-gray-500">Criar usuário</h3>
+      <h3 class="text-lg font-bold mb-4 ml-4 text-gray-500">
+        {{ action }} usuário
+      </h3>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div>
@@ -64,9 +66,14 @@ import { ActivatedRoute } from '@angular/router';
           <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Cargo</mat-label>
-              <mat-select formControlName="cargo" name="cargo">
+              <mat-select
+              [disabled]="action === 'Editar'"
+
+              formControlName="cargo" name="cargo">
                 @for (cargo of cargos; track cargo) {
-                <mat-option [value]="cargo.value">{{
+                <mat-option
+                [disabled]="action === 'Editar'"
+                [value]="cargo.value">{{
                   cargo.viewValue
                 }}</mat-option>
                 }
@@ -155,7 +162,8 @@ import { ActivatedRoute } from '@angular/router';
 export class CriarUsuarioComponent implements OnInit {
   form: FormGroup;
   private _snackBar = inject(MatSnackBar);
-
+  action: string = 'Criar';
+  userId: number | null = null;
   cargos: GenericSelect[] = [
     { value: 0, viewValue: 'ALUNO' },
     { value: 1, viewValue: 'PROFESSOR' },
@@ -164,8 +172,7 @@ export class CriarUsuarioComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioServiceService,
-    private route: ActivatedRoute,
-
+    private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -178,18 +185,26 @@ export class CriarUsuarioComponent implements OnInit {
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('id');
     if (userId) {
+      this.userId = Number(userId);
+      this.action = 'Editar';
       this.usuarioService.findById(Number(userId)).subscribe((res) => {
-        this.form.reset()
+        this.form.reset();
         this.form.patchValue(res);
-        this.form.controls['cargo']
-        .setValue(this.cargos.find(cargo => cargo.viewValue === res.cargo.toString())?.value )
-
+        this.form.controls['cargo'].setValue(
+          this.cargos.find((cargo) => cargo.viewValue === res.cargo.toString())
+            ?.value
+        );
       });
     }
-
   }
   showSuccess() {
     this._snackBar.open('Usuário criado com sucesso', 'Fechar', {
+      duration: 3000,
+      panelClass: ['success-snackbar'],
+    });
+  }
+  showSuccessEdit() {
+    this._snackBar.open('Usuário atualizado com sucesso', 'Fechar', {
       duration: 3000,
       panelClass: ['success-snackbar'],
     });
@@ -207,90 +222,100 @@ export class CriarUsuarioComponent implements OnInit {
     });
   }
   onSubmit() {
-    console.log(this.form.value);
-
-    if (this.form.valid) {
-      if (this.form.controls['cpf'].value.length !== 11) {
-        this.form.controls['cpf'].setErrors({ invalid: true });
-        this.form.controls['cpf'].markAsTouched();
-        this.form.controls['cpf'].markAsDirty();
-        this.form.controls['cpf'].updateValueAndValidity();
-        this._snackBar.open('CPF inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      } else {
-        console.log('Formulário válido');
-        const formData = this.form.value;
-        this.usuarioService.criarUsuario(formData).subscribe({
-          next: (res) => {
-            console.log(res);
-            this.showSuccess();
-          },
-          error: (err) => {
-            console.log(err);
-            if (err.error.message !== undefined) {
-              this.showErrorMessage(err.error.message);
-            } else {
-              this.showError();
-            }
-          },
-        });
-      }
+    if (this.userId != null) {
+      this.usuarioService.updateUsuario(this.userId, this.form.value).subscribe({
+        next: (res) => {
+          this.showSuccessEdit();
+        },
+        error: (err) => {
+          this.showError();
+        },
+      });
     } else {
-      console.log('Formulário inválido');
-      if (this.form.controls['cpf'].invalid) {
-        this.form.controls['cpf'].setErrors({ invalid: true });
-        this.form.controls['cpf'].markAsTouched();
-        this.form.controls['cpf'].markAsDirty();
-        this.form.controls['cpf'].updateValueAndValidity();
-        this._snackBar.open('CPF inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
+      console.log(this.form.value);
+      if (this.form.valid) {
+        if (this.form.controls['cpf'].value.length !== 11) {
+          this.form.controls['cpf'].setErrors({ invalid: true });
+          this.form.controls['cpf'].markAsTouched();
+          this.form.controls['cpf'].markAsDirty();
+          this.form.controls['cpf'].updateValueAndValidity();
+          this._snackBar.open('CPF inválido', 'Fechar', {
+            duration: 3000,
+            panelClass: ['error-snackbar'],
+          });
+        } else {
+          console.log('Formulário válido');
+          const formData = this.form.value;
+          this.usuarioService.criarUsuario(formData).subscribe({
+            next: (res) => {
+              console.log(res);
+              this.showSuccess();
+            },
+            error: (err) => {
+              console.log(err);
+              if (err.error.message !== undefined) {
+                this.showErrorMessage(err.error.message);
+              } else {
+                this.showError();
+              }
+            },
+          });
+        }
+      } else {
+        console.log('Formulário inválido');
+        if (this.form.controls['cpf'].invalid) {
+          this.form.controls['cpf'].setErrors({ invalid: true });
+          this.form.controls['cpf'].markAsTouched();
+          this.form.controls['cpf'].markAsDirty();
+          this.form.controls['cpf'].updateValueAndValidity();
+          this._snackBar.open('CPF inválido', 'Fechar', {
+            duration: 3000,
+            panelClass: ['error-snackbar'],
+          });
+        }
+        if (this.form.controls['rg'].invalid) {
+          this.form.controls['rg'].setErrors({ invalid: true });
+          this.form.controls['rg'].markAsTouched();
+          this.form.controls['rg'].markAsDirty();
+          this.form.controls['rg'].updateValueAndValidity();
+          this._snackBar.open('RG inválido', 'Fechar', {
+            duration: 3000,
+            panelClass: ['error-snackbar'],
+          });
+        }
+        if (this.form.controls['email'].invalid) {
+          this.form.controls['email'].setErrors({ invalid: true });
+          this.form.controls['email'].markAsTouched();
+          this.form.controls['email'].markAsDirty();
+          this.form.controls['email'].updateValueAndValidity();
+          this._snackBar.open('E-mail inválido', 'Fechar', {
+            duration: 3000,
+            panelClass: ['error-snackbar'],
+          });
+        }
+        if (this.form.controls['nome'].invalid) {
+          this.form.controls['nome'].setErrors({ invalid: true });
+          this.form.controls['nome'].markAsTouched();
+          this.form.controls['nome'].markAsDirty();
+          this.form.controls['nome'].updateValueAndValidity();
+          this._snackBar.open('Nome inválido', 'Fechar', {
+            duration: 3000,
+            panelClass: ['error-snackbar'],
+          });
+        }
+        if (this.form.controls['cargo'].invalid) {
+          this.form.controls['cargo'].setErrors({ invalid: true });
+          this.form.controls['cargo'].markAsTouched();
+          this.form.controls['cargo'].markAsDirty();
+          this.form.controls['cargo'].updateValueAndValidity();
+          this._snackBar.open('Cargo inválido', 'Fechar', {
+            duration: 3000,
+            panelClass: ['error-snackbar'],
+          });
+        }
       }
-      if (this.form.controls['rg'].invalid) {
-        this.form.controls['rg'].setErrors({ invalid: true });
-        this.form.controls['rg'].markAsTouched();
-        this.form.controls['rg'].markAsDirty();
-        this.form.controls['rg'].updateValueAndValidity();
-        this._snackBar.open('RG inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }
-      if (this.form.controls['email'].invalid) {
-        this.form.controls['email'].setErrors({ invalid: true });
-        this.form.controls['email'].markAsTouched();
-        this.form.controls['email'].markAsDirty();
-        this.form.controls['email'].updateValueAndValidity();
-        this._snackBar.open('E-mail inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }
-      if (this.form.controls['nome'].invalid) {
-        this.form.controls['nome'].setErrors({ invalid: true });
-        this.form.controls['nome'].markAsTouched();
-        this.form.controls['nome'].markAsDirty();
-        this.form.controls['nome'].updateValueAndValidity();
-        this._snackBar.open('Nome inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }
-      if (this.form.controls['cargo'].invalid) {
-        this.form.controls['cargo'].setErrors({ invalid: true });
-        this.form.controls['cargo'].markAsTouched();
-        this.form.controls['cargo'].markAsDirty();
-        this.form.controls['cargo'].updateValueAndValidity();
-        this._snackBar.open('Cargo inválido', 'Fechar', {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        });
-      }
+      this.limpar();
     }
-    this.limpar();
   }
 
   limpar() {
