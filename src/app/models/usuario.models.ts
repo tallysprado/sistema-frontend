@@ -1,4 +1,5 @@
 import { Aluno, GenericSelect } from "./aluno.models";
+import { DisciplinaElement } from "./disciplina.models";
 
 export type Usuario = {
   id: number | null;

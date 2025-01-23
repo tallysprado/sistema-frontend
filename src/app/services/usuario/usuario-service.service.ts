@@ -21,4 +21,8 @@ export class UsuarioServiceService {
   findAll() : Observable<IUsuario[]> {
     return this.http.get<IUsuario[]>(`${this.api}/v1/usuario/all`);
   }
+
+  findById(id: number) : Observable<IUsuario> {
+    return this.http.get<IUsuario>(`${this.api}/v1/usuario/${id}`);
+  }
 }

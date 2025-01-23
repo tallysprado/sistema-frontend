@@ -4,4 +4,5 @@ export interface DisciplinaElement {
   id: number;
   descricao: string;
   cargaHoraria: number;
+  dataCriacao: Date;
 }

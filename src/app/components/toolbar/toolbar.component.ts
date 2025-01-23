@@ -29,7 +29,6 @@ import { Subscription } from 'rxjs';
     MatButtonModule,
     MatListModule,
     MenuListItemComponent,
-    HasRolesDirective,
   ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',

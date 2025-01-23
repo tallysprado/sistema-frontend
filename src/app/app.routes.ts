@@ -10,6 +10,10 @@ export const routes: Routes = [
     component: CriarUsuarioComponent,
   },
   {
+    path: 'users/edit/:id',
+    component: CriarUsuarioComponent,
+  },
+  {
     path: 'users/aluno',
     component: ConsultarUsuarioComponent,
   },

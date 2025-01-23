@@ -26,6 +26,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalComponent } from '../modal-component/modal-component.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
+import { MatriculaService } from '../../services/matricula.service';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -193,6 +195,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
               matTooltip="Editar"
               class="!text-gray-600"
               mat-icon-button
+              (click)="openEditPage(element.id)"
             >
               <mat-icon>edit</mat-icon>
             </button>
@@ -371,7 +374,9 @@ export class FilterComponent {
   constructor(
     private usuarioService: UsuarioServiceService,
     public dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
+    private matriculaService: MatriculaService
   ) {
     this.form = this.fb.group({
       matricula: [''],
@@ -383,7 +388,11 @@ export class FilterComponent {
     });
     this.findAluno();
   }
+  openEditPage(id: string | number) {
+    console.log('Navigating to /users/create with ID:', id);
 
+    this.router.navigate(['/users/edit', id]);
+  }
   toggleRow(element: IUsuario) {
     this.expandedElement = this.expandedElement === element ? null : element;
   }
@@ -397,34 +406,14 @@ export class FilterComponent {
   findByFilter() {
     this.usuarioService.findByFilter(this.form.value).subscribe((res) => {
       this.dataSource = res as IUsuario[];
-      this.dataSource = this.dataSource.map((item) => {
-        return {
-          ...item,
-          disciplinas: [
-            { id: 1, nome: 'Engenharia de Software' },
-            { id: 2, nome: 'Qualidade de Software' },
-            { id: 3, nome: 'Física I' },
-            { id: 4, nome: 'Cálculo Diferencial e Integral II' },
-          ],
-        };
-      });
+
     });
   }
 
   findAluno() {
     this.usuarioService.findAll().subscribe((res) => {
       this.dataSource = res as IUsuario[];
-      this.dataSource = this.dataSource.map((item) => {
-        return {
-          ...item,
-          disciplinas: [
-            { id: 1, nome: 'Engenharia de Software' },
-            { id: 2, nome: 'Qualidade de Software' },
-            { id: 3, nome: 'Física I' },
-            { id: 4, nome: 'Cálculo Diferencial e Integral II' },
-          ],
-        };
-      });
+
       console.log(res);
     });
   }

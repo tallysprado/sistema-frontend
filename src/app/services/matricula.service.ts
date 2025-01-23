@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { DisciplinaElement } from '../models/disciplina.models';
 
 export interface IMatricula {
   idAluno: number | null;
   idDisciplinas: number[];
   status: boolean;
+  dataCriacao: Date;
 }
 @Injectable({
   providedIn: 'root'
@@ -21,7 +24,7 @@ export class MatriculaService {
     return this.http.post(`http://localhost:8080/v1/disciplina/matricula`, matricula);
   }
 
-  findDisciplinasMatriculadas(idAluno: number) {
-    return this.http.get(`http://localhost:8080/v1/disciplina/matriculas/${idAluno}`);
+  findDisciplinasMatriculadas(idAluno: number):Observable<DisciplinaElement []> {
+    return this.http.get<DisciplinaElement []>(`http://localhost:8080/v1/disciplina/matriculas/${idAluno}`);
   }
 }

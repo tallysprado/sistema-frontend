@@ -1,3 +1,5 @@
+import { IUsuario, Usuario } from "./usuario.models";
+
 export type Aluno = {
   id: number | null;
   nome: string | null;
@@ -6,6 +8,12 @@ export type Aluno = {
   rg: string | null;
   email: string | null;
   disciplina: string | null;
+}
+
+export interface IAluno  {
+  usuario: Usuario | null;
+  id: number | null;
+  matricula: string | null;
 }
 
 export type GenericSelect = {

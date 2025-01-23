@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,27 +19,11 @@ import {
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { UsuarioServiceService } from '../../services/usuario/usuario-service.service';
-import { Usuario } from '../../models/usuario.models';
+import { IUsuario, Usuario } from '../../models/usuario.models';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { CommonModule } from '@angular/common';
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-filter',
   providers: [provideNgxMask()],
@@ -168,7 +152,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     }
   `,
 })
-export class CriarUsuarioComponent {
+export class CriarUsuarioComponent implements OnInit {
   form: FormGroup;
   private _snackBar = inject(MatSnackBar);
 
@@ -177,10 +161,11 @@ export class CriarUsuarioComponent {
     { value: 1, viewValue: 'PROFESSOR' },
     { value: 2, viewValue: 'COORDENADOR' },
   ];
-  dataSource = ELEMENT_DATA;
   constructor(
     private fb: FormBuilder,
-    private usuarioService: UsuarioServiceService
+    private usuarioService: UsuarioServiceService,
+    private route: ActivatedRoute,
+
   ) {
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -189,6 +174,19 @@ export class CriarUsuarioComponent {
       rg: [''],
       email: ['', Validators.email],
     });
+  }
+  ngOnInit() {
+    const userId = this.route.snapshot.paramMap.get('id');
+    if (userId) {
+      this.usuarioService.findById(Number(userId)).subscribe((res) => {
+        this.form.reset()
+        this.form.patchValue(res);
+        this.form.controls['cargo']
+        .setValue(this.cargos.find(cargo => cargo.viewValue === res.cargo.toString())?.value )
+
+      });
+    }
+
   }
   showSuccess() {
     this._snackBar.open('Usuário criado com sucesso', 'Fechar', {

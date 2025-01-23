@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
-import { Aluno, GenericSelect } from '../../models/aluno.models';
+import { Aluno, GenericSelect, IAluno } from '../../models/aluno.models';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
@@ -30,6 +30,7 @@ import { DisciplinaElement } from '../../models/disciplina.models';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { AlunoServiceService } from '../../services/aluno/aluno-service.service';
 
 @Component({
   selector: 'app-filter',
@@ -151,6 +152,15 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
               </td>
             </ng-container>
 
+            <ng-container matColumnDef="dataCriacao">
+              <th mat-header-cell *matHeaderCellDef>Data Matrícula</th>
+              <td mat-cell *matCellDef="let element">
+                <div *ngIf="element.dataCriacao">
+                  {{ element.dataCriacao | date:'dd/MM/yyyy' }}
+                </div>
+              </td>
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr
               mat-row
@@ -196,7 +206,7 @@ export class MatriculaComponent implements OnInit {
   private _snackBar = inject(MatSnackBar);
   options: string[] = [];
   optionsUsuario: (IUsuario | null)[] = [];
-  displayedColumns: string[] = ['select', 'nome', 'descricao', 'carga'];
+  displayedColumns: string[] = ['select', 'nome', 'descricao', 'carga', 'dataCriacao'];
   selection = new SelectionModel<DisciplinaElement>(true, []);
   usuario: IUsuario | null | undefined;
   filteredOptions!: Observable<string[]>;
@@ -211,7 +221,8 @@ export class MatriculaComponent implements OnInit {
     private fb: FormBuilder,
     private usuarioService: UsuarioServiceService,
     private matriculaService: MatriculaService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private alunoService: AlunoServiceService
   ) {
     this.form = this.fb.group({
       nome: [''],
@@ -380,18 +391,27 @@ export class MatriculaComponent implements OnInit {
       currentValue = 'A-';
     }
 
+    if(currentValue.length  ===9){
+      this.alunoService.findByMatricula(currentValue.slice(2)).subscribe((res) => {
+        let aluno = res as IAluno;
+      });
+    }
+
     this.form.get('matricula')?.setValue(currentValue, { emitEvent: false });
     inputElement.value = currentValue;
   }
   onSubmit() {
     const matricula: IMatricula = {
-      idAluno: this.usuario?.id ?? null,
+      idAluno: this.usuario?.aluno?.id ?? null,
       idDisciplinas: this.selection.selected.map((disciplina) => disciplina.id),
       status: true,
+      dataCriacao: new Date(),
     };
     this.matriculaService.matricular(matricula).subscribe((res) => {
       this.showSuccess();
     });
+    this.limpar();
+
   }
   limpar() {
     this.form.reset();
