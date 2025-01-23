@@ -30,7 +30,7 @@ Após execução, acessar o sistema front end em `http://localhost:4200/`.
     - Expandir a linha mostra disciplinas matriculadas.
     - Responsividade mobile para filtros e tabela (é exibido cards com as colunas no lugar das linhas na visualização
     em dispositivos móveis).
-    - A edição está incompleta em construção 🏗️ os dados apenas são carregados na tela de criar.
+    - A edição está em construção 🏗️ os dados apenas são carregados na tela de criar.
     - O filtro da matrícula é um inner join a depender do tipo se é Aluno, Professor ou Coordenador
 - Menu "Matrícula - Aluno":
     - É listado apenas entidade Aluno.
