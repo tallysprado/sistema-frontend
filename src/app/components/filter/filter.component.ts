@@ -80,7 +80,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         Consultar usuários
       </h3>
       <form [formGroup]="form" (ngSubmit)="findByFilter()">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 p-3">
           <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Matrícula</mat-label>

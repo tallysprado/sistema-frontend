@@ -48,7 +48,7 @@ import { ActivatedRoute } from '@angular/router';
         {{ action }} usuário
       </h3>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-3">
           <div>
             <mat-form-field class="!w-full !m-3">
               <mat-label>Nome</mat-label>
