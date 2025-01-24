@@ -399,6 +399,10 @@ export class MatriculaComponent implements OnInit {
     inputElement.value = currentValue;
   }
   onSubmit() {
+    if(this.usuario?.aluno?.id == null){
+      this.showErrorMessage('Aluno não encontrado');
+      return;
+    }
     const matricula: IMatricula = {
       idAluno: this.usuario?.aluno?.id ?? null,
       idDisciplinas: this.selection.selected.map((disciplina) => disciplina.id),
