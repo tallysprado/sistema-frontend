@@ -1,10 +1,20 @@
-<mat-toolbar class="!bg-blue-700 w-full !text-sm mat-elevation-z8 !fixed !top-0 !left-0 !right-0 !z-50">
+<mat-toolbar
+  class="!bg-blue-700 w-full !text-sm mat-elevation-z8 !fixed !top-0 !left-0 !right-0 !z-50"
+>
   <button mat-icon-button (click)="drawer.toggle()" aria-label="Menu">
     <mat-icon class="!text-white">menu</mat-icon>
   </button>
   <span class="!text-white">SIDM - Sistema Integrado de Matrículas Online</span>
   <span class="spacer"></span>
-  <button (click)="logout()" mat-icon-button class="!text-white" aria-label="Sair">
+
+  <span class="!text-white" *ngIf="username"> Bem-vindo, {{ username }} </span>
+
+  <button
+    (click)="logout()"
+    mat-icon-button
+    class="!text-white"
+    aria-label="Sair"
+  >
     <mat-icon>logout</mat-icon>
   </button>
 </mat-toolbar>
@@ -19,7 +29,7 @@
     <!-- <app-menu></app-menu> -->
   </mat-drawer>
 
-  <div class="sidenav-content " (click)="drawer.close()">
+  <div class="sidenav-content" (click)="drawer.close()">
     <router-outlet></router-outlet>
   </div>
 </mat-drawer-container>

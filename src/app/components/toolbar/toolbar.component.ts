@@ -47,6 +47,7 @@ export class ToolbarComponent implements AfterViewInit, OnDestroy {
   navbarData = navbarData;
   private breakpointSubscription!: Subscription;
   isHandset: boolean = false;
+  username: string = '';
 
   constructor(
     private keycloak: Keycloak,
@@ -63,6 +64,10 @@ export class ToolbarComponent implements AfterViewInit, OnDestroy {
         } else {
           this.drawer.mode = 'side';
         }
+      });
+
+      this.keycloak.loadUserProfile().then((userProfile) => {
+        this.username = userProfile.firstName || userProfile.username || '';
       });
   }
   ngOnDestroy() {
