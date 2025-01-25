@@ -24,7 +24,7 @@ Após execução, acessar o sistema front end em `http://localhost:4200/`.
     - Nome, Cargo e CPF são dados obrigatórios e exclusivos (validação backend para exception de constraint)
     - A depender do cargo, será criado uma entidade Aluno, Professor ou Coordenador e será associada 
     à entidade usuário.
-    - Enter ao salvar.
+    - Enter salva os dados.
     - Responsividade dos campos (4 colunas telas largas, 1 coluna disp. mobile)
     - Usuários criados nessa tela podem acessar a aplicação de acordo com a role definida em 'cargo'. Utilizar senha "123".
 - Menu "Usuários -> Consultar":
