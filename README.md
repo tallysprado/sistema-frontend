@@ -9,7 +9,7 @@ docker-compose -p sistema-backend up
 #### Com a imagem anterior em execução, siga os passos a seguir
 ## 1. Baixe o repositório e execute
 ```bash script
-npm install -f
+npm install
 ```
 
 ## 2. Após instalacão de dependências, inicie o servidor
