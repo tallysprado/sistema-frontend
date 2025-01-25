@@ -1,0 +1,8 @@
+{
+  "/": {
+      "target": "http://localhost:9081",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true
+  }
+}

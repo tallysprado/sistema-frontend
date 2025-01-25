@@ -35,7 +35,7 @@ export const appConfig: ApplicationConfig = {
       config: {
         url: 'http://localhost:9081',
         realm: 'sistema-backend',
-        clientId: 'sistemaClient',
+        clientId: 'sistema',
 
       },
       initOptions: {
