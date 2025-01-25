@@ -24,7 +24,7 @@ export interface IUsuario {
   professor: Professor | null;
   disciplinas: Disciplina[];
   coordenador: Coordenador | null;
-  [key: string]: any; // Permite acessar propriedades dinâmicas
+  [key: string]: any;
 
 }
 

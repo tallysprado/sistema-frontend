@@ -16,7 +16,7 @@ export const routes: Routes = [
     path: 'users/create',
     canActivate: [canActivateAuthRole],
     data: {
-      role: ['coordenador'],
+      roles: ['coordenador'],
     },
     component: CriarUsuarioComponent,
   },
@@ -24,7 +24,7 @@ export const routes: Routes = [
     path: 'users/edit/:id',
     canActivate: [canActivateAuthRole],
     data: {
-      role: 'coordenador',
+      roles: ['coordenador'],
     },
     component: CriarUsuarioComponent,
   },
@@ -32,7 +32,7 @@ export const routes: Routes = [
     path: 'users/aluno',
     canActivate: [canActivateAuthRole],
     data: {
-      role: 'coordenador',
+      roles: ['coordenador'],
     },
     component: ConsultarUsuarioComponent,
   },
@@ -40,7 +40,7 @@ export const routes: Routes = [
     path: 'matricula/create',
     canActivate: [canActivateAuthRole],
     data: {
-      role: 'coordenador',
+      roles: ['coordenador'],
     },
     component: MatriculaComponent,
   },
@@ -48,7 +48,7 @@ export const routes: Routes = [
     path: 'periodo/create',
     canActivate: [canActivateAuthRole],
     data: {
-      role: 'aluno',
+      roles: ['aluno'],
     },
     component: MatriculaComponent,
   },

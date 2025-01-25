@@ -97,6 +97,6 @@ export class MenuListItemComponent {
 
   hasRealmRole(role: string): boolean {
     // return this.keycloakService.isUserInRole(role);
-    return this.keycloak.hasRealmRole(role);
+    return this.keycloak.hasResourceRole(role);
   }
 }
