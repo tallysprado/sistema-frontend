@@ -21,7 +21,10 @@ npm install
 npm start
 ```
 
-###### OBS: Crie um usuário no _realm_ sistema-backend e associe a ele a _role_ de coordenador.
+#### Utilize as credenciais:
+#### Usuário: __universidade__
+#### Senha: __123__
+###### Ou então: crie um usuário no _realm_ sistema-backend e associe a ele a _role_ de coordenador.
 
 Após execução, acessar o sistema front end em `http://localhost:4200/`.
 
