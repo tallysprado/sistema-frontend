@@ -58,7 +58,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatIconModule,
     CommonModule,
     MatTooltipModule,
-    ModalComponent,
     ReactiveFormsModule,
     MatButtonModule,
   ],

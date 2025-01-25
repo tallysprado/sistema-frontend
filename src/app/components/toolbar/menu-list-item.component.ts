@@ -20,7 +20,6 @@ import { KeycloakService } from 'keycloak-angular';
     RouterModule,
     MatButtonModule,
     CommonModule,
-    HasRolesDirective,
     MatButtonModule
   ],
   template: `

@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialog
 
 @Component({
   selector: 'app-confirm-dialog',
-  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent],
+  imports: [MatButtonModule, MatDialogActions, MatDialogTitle, MatDialogContent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './confirm-dialog.component.html',
   styleUrl: './confirm-dialog.component.scss'
