@@ -35,7 +35,7 @@ Após execução, acessar o sistema front end em `http://localhost:4200/`.
     à entidade usuário.
     - Enter salva os dados.
     - Responsividade dos campos (4 colunas telas largas, 1 coluna disp. mobile)
-    - Usuários criados nessa tela podem acessar a aplicação de acordo com a role definida em 'cargo'. Utilizar senha "123".
+    - Usuários criados nessa tela podem acessar a aplicação de acordo com a role definida em 'cargo'. Utilizar senha "123". E matrícula gerada (Ver tela de consulta).
 - Menu "Usuários -> Consultar":
     - Testar login na aplicação utilizando matrícula e senha "123"  
     - Expandir a linha mostra disciplinas matriculadas.
