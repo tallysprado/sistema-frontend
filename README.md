@@ -8,7 +8,7 @@ docker-compose -p sistema-backend up -d
 ```
 ##### Iniciar API:
 ```bash script
-mvn quarkus:dev
+mvnw quarkus:dev
 ```
 #### Com a imagem anterior em execução, siga os passos a seguir
 ## 1. Baixe o repositório e execute
