@@ -2,10 +2,14 @@
 ##### Pré-requisitos:
 ##### Docker do sistema backend deve estar em execução.
 ##### No diretório raiz do sistema-backend <https://github.com/tallysprado/sistema-backend>, com Docker instalado, executar
+##### Iniciar Keycloak e Postgresql no Docker:
 ```bash script
-docker-compose -p sistema-backend up
+docker-compose -p sistema-backend up -d
 ```
-
+##### Iniciar API:
+```bash script
+mvn quarkus:dev
+```
 #### Com a imagem anterior em execução, siga os passos a seguir
 ## 1. Baixe o repositório e execute
 ```bash script
