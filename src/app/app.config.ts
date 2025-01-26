@@ -17,7 +17,7 @@ import {
 } from '@angular/common/http';
 
 const urlCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
-  urlPattern: /^(http:\/\/localhost:9081)(\/.*)?$/i,
+  urlPattern: /^(http:\/\/localhost:8080)(\/.*)?$/i,
   bearerPrefix: 'Bearer',
 });
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -29,31 +29,35 @@ import {
   includeBearerTokenInterceptor,
 } from 'keycloak-angular';
 
+
+export const provideKeycloakAngular = () =>
+  provideKeycloak({
+    config: {
+      url: 'http://localhost:9081',
+      realm: 'sistema-backend',
+      clientId: 'sistema',
+
+    },
+    initOptions: {
+      onLoad: 'login-required',
+      // silentCheckSsoRedirectUri:
+      //   window.location.origin + '/silent-check-sso.html',
+    },
+    features: [
+      withAutoRefreshToken({
+        onInactivityTimeout: `logout`,
+        sessionTimeout: 300000,
+      })
+    ],
+    providers: [AutoRefreshTokenService, UserActivityService]
+  });
+
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideKeycloak({
-      config: {
-        url: 'http://localhost:9081',
-        realm: 'sistema-backend',
-        clientId: 'sistema',
-
-      },
-      initOptions: {
-        onLoad: 'login-required',
-        // silentCheckSsoRedirectUri:
-        //   window.location.origin + '/silent-check-sso.html',
-      },
-      features: [
-        withAutoRefreshToken({
-          onInactivityTimeout: `logout`,
-          sessionTimeout: 300000,
-        })
-      ],
-      providers: [AutoRefreshTokenService, UserActivityService]
-    }),
+    provideKeycloakAngular(),
     {
       provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
-      useValue: [urlCondition], // <-- Note that multiple conditions might be added.
+      useValue: [urlCondition],
     },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
