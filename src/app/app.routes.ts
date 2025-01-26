@@ -6,6 +6,7 @@ import { CriarUsuarioComponent } from './components/criar-usuario/criar-usuario.
 import { MatriculaComponent } from './components/matricula-component/matricula.component';
 import { canActivateAuthRole } from './guard/auth.guard.routes';
 import { ForbiddenComponent } from './pages/forbidden/forbidden/forbidden.component';
+import { BlankComponent } from './pages/blank/blank/blank.component';
 
 export const routes: Routes = [
   {
@@ -50,6 +51,14 @@ export const routes: Routes = [
     data: {
       roles: ['aluno'],
     },
-    component: MatriculaComponent,
+    component: BlankComponent,
+  },
+  {
+    path: 'periodo/search',
+    canActivate: [canActivateAuthRole],
+    data: {
+      roles: ['aluno'],
+    },
+    component: BlankComponent,
   },
 ];
