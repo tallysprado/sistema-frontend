@@ -20,8 +20,8 @@
 </mat-toolbar>
 
 <mat-drawer-container class="sidenav-container !mt-16" autosize>
-  <mat-drawer #drawer class="sidenav" mode="side">
-    <mat-nav-list class="!m-0 !p-0">
+  <mat-drawer #drawer class="sidenav !rounded-none" mode="side">
+    <mat-nav-list class="!m-0 !p-0 !rounded-none">
       <ng-container *ngFor="let item of navbarData">
         <app-menu-list-item [data]="item"></app-menu-list-item>
       </ng-container>

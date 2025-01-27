@@ -23,15 +23,13 @@ import { KeycloakService } from 'keycloak-angular';
     MatButtonModule
   ],
   template: `
-    <div *ngIf="hasRealmRole(data.roles ? data.roles[0] : '')">
-      <mat-accordion
-        class="!w-full !p-0 !mt-0 !shadow-none !border-0 !rounded-none"
-      >
+    <div *ngIf="hasRealmRole(data.roles ? data.roles[0] : '')" class="w-full rounded-none">
+
         <mat-expansion-panel
-          class="!w-full !shadow-none !border-0 !rounded-none"
+          class="!w-full !shadow-none !border-0 !rounded-none !mat-elevation-z0"
         >
-          <mat-expansion-panel-header class="!w-full">
-            <mat-panel-title class="!w-full !text-md">
+          <mat-expansion-panel-header class="!w-full !rounded-none">
+            <mat-panel-title class="!w-full !text-md !rounded-none">
               {{ data.label }}
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -51,6 +49,7 @@ import { KeycloakService } from 'keycloak-angular';
                   (click)="navigateTo(link.routerLink)"
                   class="hover:bg-gray-300 hover:shadow-lg flex
                   active:bg-gray-400 active:shadow-inner
+                  rounded-none
                   transition-all duration-200 ease-in-out transform active:scale-98
                   justify-content-around w-full p-2 mb-2"
                 >
@@ -62,7 +61,6 @@ import { KeycloakService } from 'keycloak-angular';
             </mat-nav-list>
           </ng-container>
         </mat-expansion-panel>
-      </mat-accordion>
     </div>
   `,
   styles: [
