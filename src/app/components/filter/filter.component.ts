@@ -28,6 +28,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatriculaService } from '../../services/matricula.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -205,6 +206,15 @@ const ELEMENT_DATA: PeriodicElement[] = [
             >
               <mat-icon>visibility</mat-icon>
             </button>
+
+            <button
+              matTooltip="Excluir"
+              (click)="deleteUser(element)"
+              class="!text-red-700"
+              mat-icon-button
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
             } @else {
             {{ element[column.toLocaleLowerCase()] }}
             }
@@ -214,8 +224,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
         <!-- Expanded Content Column -->
         <ng-container matColumnDef="expand">
-          <th mat-header-cell
-          *matHeaderCellDef aria-label="row actions">
+          <th mat-header-cell *matHeaderCellDef aria-label="row actions">
             &nbsp;
           </th>
           <td mat-cell *matCellDef="let element">
@@ -317,6 +326,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
             >
               <mat-icon>visibility</mat-icon>
             </button>
+            <button
+              matTooltip="Excluir"
+              (click)="deleteUser(element)"
+              class="text-red-500"
+              mat-icon-button
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </div>
       </div>
@@ -386,6 +403,28 @@ export class FilterComponent {
     });
     this.findAluno();
   }
+
+  deleteUser(element: IUsuario) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirmar exclusão',
+        message: 'Esta ação não pode ser desfeita, deseja continuar?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const mat =
+          element.aluno?.matricula ||
+          element.professor?.matricula ||
+          element.coordenador?.matricula;
+        this.usuarioService.delete(element.id).subscribe(() => {
+          this.findAluno();
+        });
+      }
+    });
+  }
+
   openEditPage(id: string | number) {
     console.log('Navigating to /users/create with ID:', id);
 
@@ -404,23 +443,21 @@ export class FilterComponent {
   findByFilter() {
     this.usuarioService.findByFilter(this.form.value).subscribe((res) => {
       this.dataSource = res as IUsuario[];
-
     });
   }
 
   findAluno() {
     this.usuarioService.findAll().subscribe((res) => {
-      this.dataSource = (res as IUsuario[]).map(usuario => {
+      this.dataSource = (res as IUsuario[]).map((usuario) => {
         return {
           ...usuario,
-          disciplinas: usuario.aluno ? usuario.aluno.disciplinas : []
+          disciplinas: usuario.aluno ? usuario.aluno.disciplinas : [],
         };
       });
 
       console.log(this.dataSource);
     });
   }
-
 
   limpar() {
     this.form.reset();

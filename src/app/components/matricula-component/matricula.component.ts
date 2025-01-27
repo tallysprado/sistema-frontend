@@ -251,7 +251,6 @@ export class MatriculaComponent implements OnInit {
         }
       });
     } else if (event.checked) {
-      // Marca o item normalmente
       this.selection.select(row);
     }
   }
@@ -368,12 +367,27 @@ export class MatriculaComponent implements OnInit {
 
   toggleAllRows() {
     if (this.isAllSelected()) {
-      this.selection.clear();
+      if(this.selection.selected.length > 0){
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: 'Confirmar remoção de matrícula',
+            message: 'Tem certeza que deseja remover o aluno das disciplinas selecionadas?',
+          },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result) {
+            this.selection.clear();
+          }
+        });
+      }else{
+        this.selection.clear();
+      }
       return;
     }
-
     this.selection.select(...this.dataSource.data);
   }
+
   checkboxLabel(row?: DisciplinaElement): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;

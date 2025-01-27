@@ -31,4 +31,8 @@ export class UsuarioServiceService {
   findById(id: number) : Observable<IUsuario> {
     return this.http.get<IUsuario>(`${this.api}/v1/usuario/${id}`);
   }
+
+  delete(matricula: number | null | undefined) {
+    return this.http.delete(`${this.api}/v1/protected/usuario/delete/${matricula}`);
+  }
 }

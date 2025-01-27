@@ -12,7 +12,6 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
       <p><strong>Nome:</strong> {{ data.nome }}</p>
       <p><strong>Matrícula:</strong> {{ data.matricula }}</p>
       <p><strong>E-mail:</strong> {{ data.email }}</p>
-      <!-- Adicione mais campos conforme necessário -->
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-button mat-dialog-close>Fechar</button>
