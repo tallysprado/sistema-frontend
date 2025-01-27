@@ -18,6 +18,7 @@ const isAccessAllowed = async (
     );
 
   if (authenticated && hasRequiredRole(requiredRole)) {
+    console.log('authenticated', authData.keycloak.token);
     return true;
   }
 
