@@ -28,8 +28,8 @@ npm start
 
 Após execução, acessar o sistema front end em `http://localhost:4200/`.
 
-Este front-end acessa de forma segura (autenticação jwt através do HTTP INTERCEPTOR) o backend. Bem como outras rotas de criação de usuário do sistema-backend
-precisam de autenticação por token.
+Este front-end acessa de forma segura (autenticação por token através do HTTP INTERCEPTOR) o backend. Bem como outras rotas de criação de usuário do sistema-backend
+precisam de autenticação.
 
 #### Cenários de teste:
 - Menu "Usuários -> Criar": (criar usuários para acessar a aplicação através da matrícula e senha 123)
