@@ -28,6 +28,9 @@ npm start
 
 Após execução, acessar o sistema front end em `http://localhost:4200/`.
 
+Este front-end acessa de forma segura (autenticação jwt através do HTTP INTERCEPTOR) o backend. Bem como outras rotas de criação de usuário do sistema-backend
+precisam de autenticação por token.
+
 #### Cenários de teste:
 - Menu "Usuários -> Criar":
     - Nome, Cargo e CPF são dados obrigatórios e exclusivos (validação backend para exception de constraint)
