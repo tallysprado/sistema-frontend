@@ -215,6 +215,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
             >
               <mat-icon>delete</mat-icon>
             </button>
+            } @else if (column == 'Nome') {
+            {{ element.nome.toUpperCase() || 'Sem Nome' }}
+            } @else if (column == 'E-mail') {
+            {{ element.email }}
             } @else {
             {{ element[column.toLocaleLowerCase()] }}
             }
@@ -288,7 +292,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
           class="border rounded-lg mb-4 p-4 shadow"
         >
           <div class="font-bold text-gray-700">
-            {{ element.nome || 'Sem Nome' }}
+            {{ element.nome.toUpperCase() || 'Sem Nome' }}
           </div>
           <div *ngFor="let column of displayedColumns">
             @if (column !== 'Ações' && column !== 'expand') {
@@ -303,7 +307,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 {{ element.professor.matricula }}
                 } @else if (element.coordenador) {
                 {{ element.coordenador.matricula }}
-                } } @else {
+                } } @else if (column == 'Nome') {
+                {{ element.nome.toUpperCase() || 'Sem Nome' }}
+                } @else {
                 {{ element[column.toLocaleLowerCase()] }}
                 }
               </span>
@@ -449,6 +455,7 @@ export class FilterComponent {
   findAluno() {
     this.usuarioService.findAll().subscribe((res) => {
       this.dataSource = (res as IUsuario[]).map((usuario) => {
+        console.log(usuario);
         return {
           ...usuario,
           disciplinas: usuario.aluno ? usuario.aluno.disciplinas : [],
