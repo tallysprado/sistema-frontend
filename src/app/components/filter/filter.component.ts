@@ -286,7 +286,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       </table>
 
       <!-- Mobile View -->
-      <div class="block md:hidden">
+      <div class="block md:hidden mt-4">
         <div
           *ngFor="let element of dataSource"
           class="border rounded-lg mb-4 p-4 shadow"
