@@ -8,7 +8,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { Aluno, GenericSelect, IAluno } from '../../models/aluno.models';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  MatCheckboxChange,
+  MatCheckboxModule,
+} from '@angular/material/checkbox';
 import {
   FormBuilder,
   FormControl,
@@ -107,10 +110,19 @@ import { AlunoServiceService } from '../../services/aluno/aluno-service.service'
         <ng-container
           *ngIf="dataSource && dataSource.data.length > 0 && usuario != null"
         >
+          <mat-form-field class="!w-full !m-0 !p-0">
+            <mat-label>Filtro</mat-label>
+            <input
+              matInput
+              (keyup)="applyFilter($event)"
+              placeholder="Digite o nome da disciplina"
+              #input
+            />
+          </mat-form-field>
           <table
             mat-table
             [dataSource]="dataSource"
-            class="overflow-y-auto mat-elevation-z8 mt-6"
+            class="overflow-y-auto mat-elevation-z8"
           >
             <ng-container matColumnDef="select">
               <th mat-header-cell *matHeaderCellDef>
@@ -156,7 +168,7 @@ import { AlunoServiceService } from '../../services/aluno/aluno-service.service'
               <th mat-header-cell *matHeaderCellDef>Data Matrícula</th>
               <td mat-cell *matCellDef="let element">
                 <div *ngIf="element.dataCriacao">
-                  {{ element.dataCriacao | date:'dd/MM/yyyy' }}
+                  {{ element.dataCriacao | date : 'dd/MM/yyyy' }}
                 </div>
               </td>
             </ng-container>
@@ -180,8 +192,7 @@ import { AlunoServiceService } from '../../services/aluno/aluno-service.service'
           >
             Limpar
           </button>
-          <button mat-flat-button  type="submit">Salvar</button>
-
+          <button mat-flat-button type="submit">Salvar</button>
         </div>
       </form>
     </div>
@@ -208,7 +219,13 @@ export class MatriculaComponent implements OnInit {
   private _snackBar = inject(MatSnackBar);
   options: string[] = [];
   optionsUsuario: (IUsuario | null)[] = [];
-  displayedColumns: string[] = ['select', 'nome', 'descricao', 'carga', 'dataCriacao'];
+  displayedColumns: string[] = [
+    'select',
+    'nome',
+    'descricao',
+    'carga',
+    'dataCriacao',
+  ];
   selection = new SelectionModel<DisciplinaElement>(true, []);
   usuario: IUsuario | null | undefined;
   filteredOptions!: Observable<string[]>;
@@ -230,6 +247,10 @@ export class MatriculaComponent implements OnInit {
       nome: [''],
       matricula: ['A - '],
     });
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   onCheckboxChange(event: MatCheckboxChange, row: DisciplinaElement): void {
     event.source.checked = this.selection.isSelected(row);
@@ -254,8 +275,6 @@ export class MatriculaComponent implements OnInit {
       this.selection.select(row);
     }
   }
-
-
 
   openConfirmDialog() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -342,7 +361,7 @@ export class MatriculaComponent implements OnInit {
     );
   }
   showSuccess() {
-    this._snackBar.open('Aluno matriculado com sucesso', 'Fechar', {
+    this._snackBar.open('Dados salvos com sucesso', 'Fechar', {
       duration: 3000,
       panelClass: ['success-snackbar'],
     });
@@ -367,11 +386,12 @@ export class MatriculaComponent implements OnInit {
 
   toggleAllRows() {
     if (this.isAllSelected()) {
-      if(this.selection.selected.length > 0){
+      if (this.selection.selected.length > 0) {
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
           data: {
             title: 'Confirmar remoção de matrícula',
-            message: 'Tem certeza que deseja remover o aluno das disciplinas selecionadas?',
+            message:
+              'Tem certeza que deseja remover o aluno das disciplinas selecionadas?',
           },
         });
 
@@ -380,7 +400,7 @@ export class MatriculaComponent implements OnInit {
             this.selection.clear();
           }
         });
-      }else{
+      } else {
         this.selection.clear();
       }
       return;
@@ -408,12 +428,11 @@ export class MatriculaComponent implements OnInit {
       currentValue = 'A-';
     }
 
-
     this.form.get('matricula')?.setValue(currentValue, { emitEvent: false });
     inputElement.value = currentValue;
   }
   onSubmit() {
-    if(this.usuario?.aluno?.id == null){
+    if (this.usuario?.aluno?.id == null) {
       this.showErrorMessage('Aluno não encontrado');
       return;
     }
@@ -427,10 +446,10 @@ export class MatriculaComponent implements OnInit {
       this.showSuccess();
     });
     this.limpar();
-
   }
   limpar() {
     this.form.reset();
+    this.dataSource.filter = '';
     this.dataSource.data = [];
     this.selection.clear();
     this.disciplinasMatriculadas = [];
