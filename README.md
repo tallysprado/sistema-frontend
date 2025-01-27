@@ -46,6 +46,7 @@ precisam de autenticação.
     em dispositivos móveis).
     - A edição do usuário reaproveita a tela de criação.
     - O filtro da matrícula é um inner join a depender do tipo se é Aluno, Professor ou Coordenador
+    - Possibilita excluir o usuário da base e do Keycloak (futuramente deve-se habilitar este botão para roles específicas apenas)
 - Menu "Matrícula - Aluno": (relacionar disciplina x usuário)
     - É listado apenas entidade Aluno.
     - Nome é auto-complete com os alunos cadastrados, ao selecionar deve aparecer a lista de disciplinas disponíveis
