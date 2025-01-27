@@ -32,21 +32,21 @@ Este front-end acessa de forma segura (autenticação jwt através do HTTP INTER
 precisam de autenticação por token.
 
 #### Cenários de teste:
-- Menu "Usuários -> Criar":
+- Menu "Usuários -> Criar": (criar usuários para acessar a aplicação através da matrícula e senha 123)
     - Nome, Cargo e CPF são dados obrigatórios e exclusivos (validação backend para exception de constraint)
     - A depender do cargo, será criado uma entidade Aluno, Professor ou Coordenador e será associada 
     à entidade usuário.
     - Enter salva os dados.
     - Responsividade dos campos (4 colunas telas largas, 1 coluna disp. mobile)
-    - Usuários criados nessa tela podem acessar a aplicação de acordo com a role definida em 'cargo'. Utilizar senha "123". E matrícula gerada (Ver tela de consulta).
-- Menu "Usuários -> Consultar":
+    - Usuários criados nessa tela podem acessar a aplicação de acordo com a role definida em 'cargo'. Utilizar matrícula (ver tela de consulta) e senha "123".
+- Menu "Usuários -> Consultar": 
     - Testar login na aplicação utilizando matrícula e senha "123"  
     - Expandir a linha mostra disciplinas matriculadas.
     - Responsividade mobile para filtros e tabela (é exibido cards com as colunas no lugar das linhas na visualização
     em dispositivos móveis).
     - A edição do usuário reaproveita a tela de criação.
     - O filtro da matrícula é um inner join a depender do tipo se é Aluno, Professor ou Coordenador
-- Menu "Matrícula - Aluno":
+- Menu "Matrícula - Aluno": (relacionar disciplina x usuário)
     - É listado apenas entidade Aluno.
     - Nome é auto-complete com os alunos cadastrados, ao selecionar deve aparecer a lista de disciplinas disponíveis
     e as matriculadas. Selecionar e salvar vai atualizar os dados da linha expandível da tela de filtros.
