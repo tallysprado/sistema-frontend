@@ -10,7 +10,19 @@ docker-compose -p sistema-backend up -d
 ```bash script
 mvnw quarkus:dev
 ```
-#### Com a imagem anterior em execução, siga os passos a seguir
+
+#### Para servir a imagem do frontend no Docker, execute os comandos a seguir:
+```bash script
+docker build -t angular-docker .
+```
+Após construir a imagem:
+```bash script
+docker run -p 4200:4200 angular-docker
+```
+# Caso inicie através do Docker, não é necessário seguir as opções abaixo.
+
+
+#### Com a imagem do Keycloak e PostgreSQL em execução, siga os passos a seguir
 ## 1. Baixe o repositório e execute
 ```bash script
 npm install
