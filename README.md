@@ -28,7 +28,7 @@ npm start
 
 Após execução, acessar o sistema front end em `http://localhost:4200/`.
 
-Este front-end acessa de forma segura (autenticação por token através do HTTP INTERCEPTOR) o backend. Bem como outras rotas de criação de usuário do sistema-backend
+Este front-end acessa de forma segura o backend (autenticação por token através do HTTP INTERCEPTOR). Bem como outras rotas de criação de usuário do sistema-backend
 precisam de autenticação.
 
 #### Cenários de teste:
