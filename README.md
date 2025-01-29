@@ -1,6 +1,6 @@
 # SistemaFrontend
 
-## A conteinerização da aplicação está em andamento na branch docker/card01. Objetivo de reunir todos os projetos num único container sendo executado pelo compose no backend. Enquanto isto a aplicação deve ser executada manualmente.
+## A conteinerização da aplicação está em andamento na branch docker/card01. Objetivo de reunir todos os projetos num único container sendo executado pelo compose no backend. Enquanto isto a aplicação deve ser executada manualmente pela branch main.
 
 
 ##### Pré-requisitos:
