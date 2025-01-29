@@ -1,4 +1,8 @@
 # SistemaFrontend
+
+## A conteinerização da aplicação está em andamento na branch docker/card01. Objetivo de reunir todos os projetos num único container sendo executado pelo compose no backend. Enquanto isto a aplicação deve ser executada manualmente.
+
+
 ##### Pré-requisitos:
 ##### Docker do sistema backend deve estar em execução.
 ##### No diretório raiz do sistema-backend <https://github.com/tallysprado/sistema-backend>, com Docker instalado, siga os passos a seguir:
