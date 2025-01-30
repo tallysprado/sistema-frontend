@@ -1,6 +1,8 @@
 # SistemaFrontend
 
-## A conteinerização da aplicação está na branch docker/card01. Faca o checkout para esta branch e leia a documentacao para rodar todos os projetos em um unico container.
+## A conteinerização da aplicação está na branch docker/card01. Faca o checkout para esta branch e leia a documentacao nela para rodar todos os projetos em um unico container.
+
+## Caso decida iniciar o projeto por um único container, ignore esta documentacao e prossiga com a que tem em docker/card01.
 
 ##### Pré-requisitos:
 ##### Docker do sistema backend deve estar em execução.
