@@ -1,13 +1,25 @@
-# A leitura desta documentacão não é necessária se o projeto for iniciado pelo container, veja em
-# <https://github.com/tallysprado/sistema-container> 
+# Sistema Frontend
 
-# SistemaBackend
-#### Esta _branch_ contém a configuracão necessária para rodar o Angular, Quarkus, Keycloak e Postgres todos num único container. Para isto, siga os passos a seguir:
+## Para rodar a aplicação localmente, siga os passos a seguir:
+- 1. Garantir que não tenha nenhum container em execução fora o do ambiente de desenvolvimento do repositório sistema-backend.
+  - 1.1 No repositório sistema-backend, deve-se iniciar o Postgres e Keycloak em ambiente local/desenvolvimento através de:
+    - ```shell script
+      docker-compose -f docker-compose.dev.yml up
+      ```
+- 2. Agora neste repositório do __FRONTEND__, instalar dependências:
+  - ```shell script
+      npm install
+    ```
+- 3. Executar frontend no ambiente de desenvolvimento:
+  - ```shell script
+      npm run start:dev 
+    ```
 
-#### 1. Efetuar o clone dos dois projetos numa mesma pasta.
-##### A disposicão dos dois repositórios deve estar lado a lado no mesmo diretório.
+
+Diretórios: 
 ```
-pasta_qualquer_na_area_de_trabalho/
+container/
+├── docker-compose.yml              <---- garantir que não esteja em execução para rodar o projeto local
 ├── sistema-frontend/
 │   ├── src/
 │   ├── package.json
@@ -15,49 +27,19 @@ pasta_qualquer_na_area_de_trabalho/
 ├── sistema-backend/
 │   ├── src/
 │   ├── pom.xml
+│   ├── docker-compose.dev.yml      <---- executar este arquivo para desenvolvimento local
 │   └── ...
 ```
-#### 2. Abra o terminal dentro do diretório 'sistema-backend':
-##### 2.1 O projeto precisa de um único comando para rodar todas as imagens num container, onde a compilacão do backend Quarkus e frontend Angular sao feitos de forma autônoma em seus respectivos Dockerfile. Para rodar todos os projetos e compilar de forma automática execute:
-
-```shell script
-docker-compose up --build
-```
-
-##### 2.2 Caso tenha interesse em compilar o backend por fora e apenas rodar o Quarkus copiando o projeto compilado:
-###### 2.2.1 No windows, primeiro compile o projeto quarkus por fora e depois rode a imagem:
-```shell script
-.\mvnw package -DskipTests
-```
-```shell script
-$env:BUILD_DOCKERFILE = "DockerfileRun"; docker-compose up --build
-```
-##### 2.2.2 Para voltar a fazer a compilacão padrão, que é durante a construcão da imagem, faca: 
-```shell script
-$env:BUILD_DOCKERFILE = "DockerfileRun"; docker-compose up --build
-```
-##### 2.2.3 Caso esteja utilizando Linux, o comando é:
-```shell script
-export BUILD_DOCKERFILE=DockerfileRun
-```
-e em seguida:
-```shell script
-docker-compose up --build
-```
 
 
-### Estes passos são suficientes para rodar o projeto dentro de um único container.
-#### Acesse a aplicacão através da url <http://127.0.0.1:4200> utilizando as credenciais
+### Estes passos são suficientes para acessar a aplicação Angular localmente.
+#### Acesse através da url <http://localhost:4200> utilizando as credenciais
 #### Usuário: __universidade__
 #### Senha: __123__
 
-#### O console de administrador do Keycloak é acessado em <http://127.0.0.1:8080>
-
-##### Configuração do banco de dados:
-- Host: 0.0.0.0:5433
-- Banco de dados: sistema
-- Usuário: postgres
-- Senha: postgres
+#### O console de administrador do Keycloak é acessado em <http://localhost:8080>
+#### Usuário: __admin__
+#### Senha: __admin__
 
 #### Cenários de teste:
 - Menu "Usuários -> Criar": (criar usuários para acessar a aplicação através da matrícula e senha 123)
