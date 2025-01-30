@@ -1,47 +1,40 @@
-# SistemaFrontend
-##### Pré-requisitos:
-##### Docker do sistema backend deve estar em execução.
-##### No diretório raiz do sistema-backend <https://github.com/tallysprado/sistema-backend>, com Docker instalado, siga os passos a seguir:
-###### Iniciar Keycloak e Postgresql no Docker:
-```bash script
+# SistemaBackend
+#### Esta _branch_ contém a configuracão necessária para rodar o Angular, Quarkus, Keycloak e Postgres todos num único container. Para isto, siga os passos a seguir:
+
+#### 1. Efetuar o clone dos dois projetos numa mesma pasta.
+##### A disposicão dos dois repositórios deve estar lado a lado no mesmo diretório.
+```
+pasta_qualquer_na_area_de_trabalho/
+├── sistema-frontend/
+│   ├── src/
+│   ├── package.json
+│   └── ...
+├── sistema-backend/
+│   ├── src/
+│   ├── pom.xml
+│   └── ...
+```
+#### 2. Abra o terminal dentro do diretório 'sistema-backend' e faca a compilacão do projeto quarkus através de:
+```shell script
+.\mvnw package -DskipTests
+```
+#### 3. No mesmo terminal, execute o docker-compose:
+```shell script
 docker-compose -p sistema-backend up -d
 ```
-###### Iniciar API:
-```bash script
-mvnw quarkus:dev
-```
 
-#### Para servir a imagem do frontend no Docker, execute os comandos a seguir:
-```bash script
-docker build -t angular-docker .
-```
-Após construir a imagem:
-```bash script
-docker run -p 4200:4200 angular-docker
-```
-# Caso inicie através do Docker, não é necessário seguir as opções abaixo.
-
-
-#### Com a imagem do Keycloak e PostgreSQL em execução, siga os passos a seguir
-## 1. Baixe o repositório e execute
-```bash script
-npm install
-```
-
-## 2. Após instalacão de dependências, inicie o servidor
-```bash script
-npm start
-```
-
-#### Utilize as credenciais:
+### Estes passos são suficientes para rodar o projeto dentro de um único container.
+#### Acesse a aplicacão através da url <http://127.0.0.1:4200> utilizando as credenciais
 #### Usuário: __universidade__
 #### Senha: __123__
-###### Ou então: crie um usuário no _realm_ sistema-backend e associe a ele a _role_ de coordenador.
 
-Após execução, acessar o sistema front end em `http://localhost:4200/`.
+#### O console de administrador do Keycloak é acessado em <http://127.0.0.1:8080>
 
-Este front-end acessa de forma segura o backend (autenticação por token através do HTTP INTERCEPTOR). Bem como outras rotas de criação de usuário do sistema-backend
-precisam de autenticação.
+##### Configuração do banco de dados:
+- Host: 0.0.0.0:5433
+- Banco de dados: sistema
+- Usuário: postgres
+- Senha: postgres
 
 #### Cenários de teste:
 - Menu "Usuários -> Criar": (criar usuários para acessar a aplicação através da matrícula e senha 123)
@@ -71,3 +64,7 @@ precisam de autenticação.
 ROLE_COORDENADOR e ROLE_ALUNO. Deve-se considerar no teste, atribuir diferentes papéis ao usuário e verificar a página
 de acesso negado ao tentar acessar uma rota não autorizada. O papel de coordenador tem mais funcionalidades implementadas,
 porém vale testar o acesso à rota <http://localhost:4200/periodo/create> sem ter o papel 'aluno' atribuído e verificar a página de _forbidden access_.
+
+###### Dúvidas entre em contato no Whatsapp ou E-mail:
+- (88) 9 9651 - 0001
+- tallys.prado@gmail.com
