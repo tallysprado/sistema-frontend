@@ -7,7 +7,7 @@ docker-compose down -v
 ```
 - Entrar no diretório raiz do __sistema-frontend__:
 ```shell script
-cd sistema-backend
+cd sistema-frontend
 ```
 - Garantir que a imagem PostgreSQL e Keycloak do repositório __sistema_backend__ esteja em execução, vide documentação: <https://github.com/tallysprado/sistema-backend/tree/docker/card01>
 
