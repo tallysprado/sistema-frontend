@@ -1,3 +1,6 @@
+# A leitura desta documentacão não é necessária se o projeto for iniciado pelo container, veja em
+# <https://github.com/tallysprado/sistema-container> 
+
 # SistemaBackend
 #### Esta _branch_ contém a configuracão necessária para rodar o Angular, Quarkus, Keycloak e Postgres todos num único container. Para isto, siga os passos a seguir:
 
