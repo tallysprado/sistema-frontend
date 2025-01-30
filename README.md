@@ -14,14 +14,34 @@ pasta_qualquer_na_area_de_trabalho/
 │   ├── pom.xml
 │   └── ...
 ```
-#### 2. Abra o terminal dentro do diretório 'sistema-backend' e faca a compilacão do projeto quarkus através de:
+#### 2. Abra o terminal dentro do diretório 'sistema-backend':
+##### 2.1 O projeto precisa de um único comando para rodar todas as imagens num container, onde a compilacão do backend Quarkus e frontend Angular sao feitos de forma autônoma em seus respectivos Dockerfile. Para rodar todos os projetos e compilar de forma automática execute:
+
+```shell script
+docker-compose up --build
+```
+
+##### 2.2 Caso tenha interesse em compilar o backend por fora e apenas rodar o Quarkus copiando o projeto compilado:
+###### 2.2.1 No windows, primeiro compile o projeto quarkus por fora e depois rode a imagem:
 ```shell script
 .\mvnw package -DskipTests
 ```
-#### 3. No mesmo terminal, execute o docker-compose:
 ```shell script
-docker-compose -p sistema-backend up -d
+$env:BUILD_DOCKERFILE = "DockerfileRun"; docker-compose up --build
 ```
+##### 2.2.2 Para voltar a fazer a compilacão padrão, que é durante a construcão da imagem, faca: 
+```shell script
+$env:BUILD_DOCKERFILE = "DockerfileRun"; docker-compose up --build
+```
+##### 2.2.3 Caso esteja utilizando Linux, o comando é:
+```shell script
+export BUILD_DOCKERFILE=DockerfileRun
+```
+e em seguida:
+```shell script
+docker-compose up --build
+```
+
 
 ### Estes passos são suficientes para rodar o projeto dentro de um único container.
 #### Acesse a aplicacão através da url <http://127.0.0.1:4200> utilizando as credenciais
