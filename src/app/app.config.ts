@@ -17,9 +17,10 @@ import {
 } from '@angular/common/http';
 
 const urlCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
-  urlPattern: /^(http:\/\/localhost:8081)(\/.*)?$/i,
+  urlPattern: /^(http:\/\/(127\.0\.0\.1|localhost):8081)(\/.*)?$/i,
   bearerPrefix: 'Bearer',
 });
+
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   provideKeycloak,
@@ -33,7 +34,7 @@ import {
 export const provideKeycloakAngular = () =>
   provideKeycloak({
     config: {
-      url: 'http://localhost:8080',
+      url: 'http://127.0.0.1:8080',
       realm: 'sistema-backend',
       clientId: 'sistema',
 

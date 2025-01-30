@@ -1,5 +1,5 @@
 {
-  "KEYCLOAK_URL": "http://localhost:9081",
+  "KEYCLOAK_URL": "http://127.0.0.1:8080",
   "KEYCLOAK_REALM": "sistema-backend",
   "KEYCLOAK_CLIENT_ID": "sistema"
 }
