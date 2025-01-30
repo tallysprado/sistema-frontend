@@ -1,16 +1,16 @@
 # Sistema Frontend
 
 ## Para rodar a aplicação localmente, siga os passos a seguir:
-- 1. Garantir que não tenha nenhum container em execução fora o do ambiente de desenvolvimento do repositório sistema-backend.
-  - 1.1 No repositório sistema-backend, deve-se iniciar o Postgres e Keycloak em ambiente local/desenvolvimento através de:
+- Garantir que não tenha nenhum container em execução fora o do ambiente de desenvolvimento do repositório sistema-backend.
+  - No repositório sistema-backend, deve-se iniciar o Postgres e Keycloak em ambiente local/desenvolvimento através de:
     - ```shell script
       docker-compose -f docker-compose.dev.yml up
       ```
-- 2. Agora neste repositório do __FRONTEND__, instalar dependências:
+- Agora neste repositório do __FRONTEND__, instalar dependências:
   - ```shell script
       npm install
     ```
-- 3. Executar frontend no ambiente de desenvolvimento:
+- Executar frontend no ambiente de desenvolvimento:
   - ```shell script
       npm run start:dev 
     ```
