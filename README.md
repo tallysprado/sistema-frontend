@@ -1,19 +1,28 @@
 # Sistema Frontend
 
 ## Para rodar a aplicação localmente, siga os passos a seguir:
-- Garantir que não tenha nenhum container em execução fora o do ambiente de desenvolvimento do repositório sistema-backend.
-  - No repositório sistema-backend, deve-se iniciar o Postgres e Keycloak em ambiente local/desenvolvimento através de:
-    - ```shell script
-      docker-compose -f docker-compose.dev.yml up
-      ```
-- Agora neste repositório do __FRONTEND__, instalar dependências:
-  - ```shell script
-      npm install
-    ```
+- Se você estiver no diretório do container, primeiro deve garantir que a imagem do Angular e Quarkus não estejam em execução:
+```shell script
+docker-compose down -v
+```
+- Entrar no diretório raiz do __sistema-frontend__:
+```shell script
+cd sistema-backend
+```
+- Garantir que a imagem PostgreSQL e Keycloak do repositório __sistema_backend__ esteja em execução, vide documentação: <https://github.com/tallysprado/sistema-backend/tree/docker/card01>
+
+- Agora neste repositório do __sistema_frontend__, instalar dependências:
+```shell script
+npm install
+```
 - Executar frontend no ambiente de desenvolvimento:
-  - ```shell script
-      npm run start:dev 
-    ```
+```shell script
+npm run start:dev 
+```
+### Estes passos são suficientes para acessar a aplicação Angular localmente.
+#### Acesse através da url <http://localhost:4200> utilizando as credenciais
+#### Usuário: __universidade__
+#### Senha: __123__
 
 
 Diretórios: 
@@ -31,15 +40,6 @@ container/
 │   └── ...
 ```
 
-
-### Estes passos são suficientes para acessar a aplicação Angular localmente.
-#### Acesse através da url <http://localhost:4200> utilizando as credenciais
-#### Usuário: __universidade__
-#### Senha: __123__
-
-#### O console de administrador do Keycloak é acessado em <http://localhost:8080>
-#### Usuário: __admin__
-#### Senha: __admin__
 
 #### Cenários de teste:
 - Menu "Usuários -> Criar": (criar usuários para acessar a aplicação através da matrícula e senha 123)
